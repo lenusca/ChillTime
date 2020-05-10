@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "336927378907",
+    "firebase_url": "https://chilltime-10d1d.firebaseio.com",
+    "project_id": "chilltime-10d1d",
+    "storage_bucket": "chilltime-10d1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336927378907:android:b7ca00bc4eca8e566bebfe",
+        "android_client_info": {
+          "package_name": "com.example.chilltime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "336927378907-p64u810f2fancunjaa887rqdsf16m374.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJwabXEwjv0hJgyJlndElz9Zth8lU8gjo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "336927378907-p64u810f2fancunjaa887rqdsf16m374.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
