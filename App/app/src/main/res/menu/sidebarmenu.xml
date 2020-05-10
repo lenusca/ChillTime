@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/list_movies" android:icon="@drawable/movie" android:title="Movies" android:checkable="true" />
+
+    <item android:id="@+id/list_series" android:icon="@drawable/serie" android:title="Series" android:checkable="true" />
+
+    <item android:id="@+id/gps" android:icon="@drawable/gps" android:title="GPS" android:checkable="true" />
+
+    <item android:id="@+id/qrcode" android:icon="@drawable/qrcode" android:title="QR Code" android:checkable="true" />
+
+    <item android:id="@+id/userinfo" android:icon="@drawable/userdata" android:title="User Activity" android:checkable="true" />
+
+    <item android:id="@+id/settings" android:icon="@drawable/settings" android:title="Settings" android:checkable="true" />
+
+    <item android:id="@+id/logout" android:icon="@drawable/logout" android:title="Logout" android:checkable="true" />
+</menu>
