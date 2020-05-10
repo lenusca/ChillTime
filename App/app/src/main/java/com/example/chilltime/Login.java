@@ -1,8 +1,10 @@
 package com.example.chilltime;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +26,7 @@ public class Login extends AppCompatActivity {
     // dar feedback quando carrega num botão
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
     EditText email, password;
-    Button login;
+
     // autenticação no firebase
     FirebaseAuth mAuth;
 
@@ -34,7 +37,7 @@ public class Login extends AppCompatActivity {
 
         email = findViewById(R.id.Email);
         password = findViewById(R.id.Password);
-        login = findViewById(R.id.Login);
+
 
         // autenticação no firebase
         mAuth = FirebaseAuth.getInstance();
@@ -46,8 +49,6 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-
-
     }
 
     public void createAccount(View view) {
@@ -99,6 +100,27 @@ public class Login extends AppCompatActivity {
                     }
                 });
 
+
+    }
+
+    public void forgoutPassword(View view) {
+        final EditText resetMail = new EditText(view.getContext());
+        final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(view.getContext());
+        passwordResetDialog.setTitle("Reset Password");
+        passwordResetDialog.setMessage("Enter your email to received the link to reset the password");
+        passwordResetDialog.setView(resetMail);
+        passwordResetDialog.setNeutralButton("SEND", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mAuth.sendPasswordResetEmail(resetMail.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                });
+            }
+        });
+        passwordResetDialog.create().show();
 
     }
 }

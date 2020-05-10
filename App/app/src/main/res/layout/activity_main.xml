@@ -137,7 +137,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Password" />
+        app:layout_constraintTop_toBottomOf="@+id/Password"
+        android:clickable="true"
+        android:onClick="forgoutPassword"/>
 
     <TextView
         android:id="@+id/create_account"
