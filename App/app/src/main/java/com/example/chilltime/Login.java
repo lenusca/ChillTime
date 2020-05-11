@@ -15,20 +15,44 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
+
     // dar feedback quando carrega num botão
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
     EditText email, password;
 
     // autenticação no firebase
     FirebaseAuth mAuth;
+
+    // autenticação com o google
+    GoogleSignInClient mGoogleSignInClient;
+    GoogleSignInOptions gso;
+    private static final int RC_SIGN_IN = 007;
+
+    // guardar a info no Firestore
+    FirebaseFirestore mStore;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +73,17 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+        // guardar os dados no firestore
+        mStore = FirebaseFirestore.getInstance();
+
+        // Configurar o Sign in com o google
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     public void createAccount(View view) {
@@ -123,4 +158,94 @@ public class Login extends AppCompatActivity {
         passwordResetDialog.create().show();
 
     }
+
+    public void loginGoogle(View view) {
+        // Feedback visual quando carrega no botão
+        view.startAnimation(buttonClick);
+        signIn();
+
+    }
+
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                System.out.println("FAILED LOGIN WITH GOOGLE"+e);
+
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        System.out.println(acct.getIdToken());
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            System.out.println("signInWithCredential:success");
+                            // guardar nome, foto, mail na bd
+                            final GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+                            if(account != null){
+                                userID = mAuth.getCurrentUser().getUid();
+                                System.out.println(userID);
+                                final DocumentReference documentReference = mStore.collection("Users").document(userID);
+                                // verificar se já existe o document0
+                                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            DocumentSnapshot documentSnapshot = task.getResult();
+                                            // documento existe, logo não é preciso adicionar
+                                            if(documentSnapshot.exists()){
+                                                // Ir para o menu
+                                                Intent intent = new Intent(Login.this, GPS.class);
+                                                startActivity(intent);
+                                            }
+                                            else{
+                                                Map<String, Object> userData = new HashMap<>();
+                                                // key(o que aparece no firebase antes dos :), value(depois dos :)
+                                                userData.put("Name", account.getDisplayName());
+                                                userData.put("Email", account.getEmail());
+                                                userData.put("Image", account.getPhotoUrl().toString());
+                                                documentReference.set(userData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        System.out.println("ADICIONADOOOO");
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                            // Ir para o menu
+                            Intent intent = new Intent(Login.this, GPS.class);
+                            startActivity(intent);
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            System.out.println("signInWithCredential:failure"+task.getException());
+                        }
+
+                    }
+                });
+    }
+
 }

@@ -92,7 +92,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/facebook"
         app:layout_constraintTop_toBottomOf="@+id/create_account"
-        app:srcCompat="@drawable/google" />
+        app:srcCompat="@drawable/google"
+        android:clickable="true"
+        android:onClick="loginGoogle"/>
 
     <ImageButton
         android:id="@+id/facebook"
