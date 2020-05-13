@@ -87,17 +87,21 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="84dp"
         android:layout_marginRight="84dp"
+        android:layout_marginBottom="32dp"
         android:background="@null"
-        android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/facebook"
-        app:layout_constraintTop_toBottomOf="@+id/create_account"
-        app:srcCompat="@drawable/google"
         android:clickable="true"
-        android:onClick="loginGoogle"/>
+        android:onClick="loginGoogle"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.55"
+        app:layout_constraintStart_toEndOf="@+id/bt_fb_login"
+        app:layout_constraintTop_toBottomOf="@+id/create_account"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/google" />
 
     <ImageButton
-        android:id="@+id/facebook"
+        android:id="@+id/bt_fb_login"
         android:layout_width="62dp"
         android:layout_height="58dp"
         android:layout_marginStart="84dp"
@@ -109,7 +113,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_account"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/facebook" />
+        app:srcCompat="@drawable/facebook"
+        android:clickable="true"
+        />
 
     <ImageView
         android:id="@+id/logo"

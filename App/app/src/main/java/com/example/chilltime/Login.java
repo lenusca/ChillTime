@@ -13,8 +13,15 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,6 +33,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -33,6 +42,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +68,10 @@ public class Login extends AppCompatActivity {
     FirebaseFirestore mStore;
     String userID;
 
+    // autenticação com o facebook
+    CallbackManager callbackManager;
+    ImageButton facebookButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +79,7 @@ public class Login extends AppCompatActivity {
 
         email = findViewById(R.id.Email);
         password = findViewById(R.id.Password);
+        facebookButton = findViewById(R.id.bt_fb_login);
 
 
         // autenticação no firebase
@@ -84,6 +103,41 @@ public class Login extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Facebook
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager,
+                // Feedback visual quando carrega no botão
+
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        System.out.println("Deu o login");
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        System.out.println("Não deu o login");
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        System.out.println(error.getMessage());
+                    }
+                });
+
+
+
+        facebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Feedback visual quando carrega no botão
+                view.startAnimation(buttonClick);
+                LoginManager.getInstance().logInWithReadPermissions(Login.this, Arrays.asList("public_profile","email"));
+            }
+        });
     }
 
     public void createAccount(View view) {
@@ -173,6 +227,7 @@ public class Login extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
@@ -202,7 +257,7 @@ public class Login extends AppCompatActivity {
                             System.out.println("signInWithCredential:success");
                             // guardar nome, foto, mail na bd
                             final GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
-                            if(account != null){
+                            if(account != null) {
                                 userID = mAuth.getCurrentUser().getUid();
                                 System.out.println(userID);
                                 final DocumentReference documentReference = mStore.collection("Users").document(userID);
@@ -210,15 +265,14 @@ public class Login extends AppCompatActivity {
                                 documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if(task.isSuccessful()){
+                                        if (task.isSuccessful()) {
                                             DocumentSnapshot documentSnapshot = task.getResult();
                                             // documento existe, logo não é preciso adicionar
-                                            if(documentSnapshot.exists()){
+                                            if (documentSnapshot.exists()) {
                                                 // Ir para o menu
                                                 Intent intent = new Intent(Login.this, GPS.class);
                                                 startActivity(intent);
-                                            }
-                                            else{
+                                            } else {
                                                 Map<String, Object> userData = new HashMap<>();
                                                 // key(o que aparece no firebase antes dos :), value(depois dos :)
                                                 userData.put("Name", account.getDisplayName());
@@ -230,22 +284,81 @@ public class Login extends AppCompatActivity {
                                                         System.out.println("ADICIONADOOOO");
                                                     }
                                                 });
+                                                // Ir para o menu
+                                                Intent intent = new Intent(Login.this, GPS.class);
+                                                startActivity(intent);
                                             }
                                         }
                                     }
                                 });
                             }
-                            // Ir para o menu
-                            Intent intent = new Intent(Login.this, GPS.class);
-                            startActivity(intent);
-
                         } else {
                             // If sign in fails, display a message to the user.
                             System.out.println("signInWithCredential:failure"+task.getException());
                         }
-
                     }
                 });
     }
 
+    // guardar o login no firebase
+    private void handleFacebookAccessToken(AccessToken token) {
+        System.out.println("handleFacebookAccessToken"+token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            System.out.println("signInWithCredential:success");
+                            // guardar nome, foto e email na bd
+                            userID = mAuth.getCurrentUser().getUid();
+                            final DocumentReference documentReference = mStore.collection("Users").document(userID);
+                            // verifica se o documento já existe
+                            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                  @Override
+                                  public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                      if(task.isSuccessful()){
+                                          DocumentSnapshot documentSnapshot = task.getResult();
+                                          // documento existe, logo não é preciso criar novo
+                                          if(documentSnapshot.exists()){
+                                              // Vai para o menu
+                                              Intent intent = new Intent(Login.this, GPS.class);
+                                              startActivity(intent);
+                                          }
+                                          // cria um novo documento, com o id do utilizador
+                                          else{
+                                              Map<String, Object> userData = new HashMap<>();
+                                              // key(o que aparece no firebase antes dos :), value(depois dos :)
+                                              userData.put("Name", user.getDisplayName());
+                                              userData.put("Email", user.getEmail());
+                                              userData.put("Image", user.getPhotoUrl().toString());
+                                              documentReference.set(userData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                  @Override
+                                                  public void onSuccess(Void aVoid) {
+                                                      System.out.println("ADICIONADOOOO");
+                                                  }
+                                              });
+                                              // Ir para o menu
+                                              Intent intent = new Intent(Login.this, GPS.class);
+                                              startActivity(intent);
+                                          }
+                                      }
+                                  }
+                              }
+
+                            );
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+
+                            Toast.makeText(Login.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+    }
 }
