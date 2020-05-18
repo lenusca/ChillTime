@@ -4,23 +4,47 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GPS" android:label="GPS" android:icon="@drawable/home" android:roundIcon="@drawable/home" android:enabled="true"></activity>
-        <activity android:name=".CreateAccount" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".Login" android:theme="@style/AppTheme.NoActionBar">
-
+        <activity android:name=".Series"
+            android:enabled="true"
+            android:icon="@drawable/home"
+            android:label="Series"
+            android:roundIcon="@drawable/home"
+            />
+        <activity
+            android:name=".Movies"
+            android:enabled="true"
+            android:icon="@drawable/home"
+            android:label="Movies"
+            android:roundIcon="@drawable/home" />
+        <activity
+            android:name=".GPS"
+            android:enabled="true"
+            android:icon="@drawable/home"
+            android:label="GPS"
+            android:roundIcon="@drawable/home" />
+        <activity
+            android:name=".CreateAccount"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".Login"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

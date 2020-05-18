@@ -21,7 +21,6 @@
             android:layout_marginEnd="370dp"
             android:layout_marginRight="370dp"
             android:layout_marginBottom="584dp"
-            android:text="TESTE"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.602"
@@ -41,10 +40,7 @@
         app:itemTextColor="#38393B"
         app:itemIconTint="@android:color/black"
         app:menu="@menu/sidebarmenu"
-        tools:ignore="MissingConstraints"
-
-
-        />
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

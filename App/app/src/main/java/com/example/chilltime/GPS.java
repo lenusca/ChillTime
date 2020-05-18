@@ -35,6 +35,8 @@ public class GPS extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseFirestore mStore;
     String userID;
+    // Para mudar de activities
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +70,13 @@ public class GPS extends AppCompatActivity {
                 Picasso.get().load(printimage).into(image);
             }
         });
-        choice = new ActionBarDrawerToggle(this, sidebar, R.string.Open, R.string.Close);
-        choice.setDrawerIndicatorEnabled(true);
 
+        choice = new ActionBarDrawerToggle(this, sidebar, R.string.Open, R.string.Close);
         sidebar.addDrawerListener(choice);
+        choice.setDrawerIndicatorEnabled(true);
         choice.syncState();
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         nav_view.setItemIconTintList(null);
@@ -85,13 +88,18 @@ public class GPS extends AppCompatActivity {
                 switch(id)
                 {
                     case R.id.list_movies:
-                        Toast.makeText(GPS.this, "MOVIES",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(GPS.this, Movies.class);
+                        startActivity(intent);
+                        GPS.this.finish();
                         return true;
                     case R.id.list_series:
-                        Toast.makeText(GPS.this, "SERIES",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(GPS.this, Series.class);
+                        startActivity(intent);
+                        GPS.this.finish();
                         return true;
                     case R.id.gps:
-                        Toast.makeText(GPS.this, "GPS",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(GPS.this, GPS.class);
+                        startActivity(intent);
                         return true;
                     case R.id.qrcode:
                         Toast.makeText(GPS.this, "QR Code",Toast.LENGTH_SHORT).show();
@@ -104,7 +112,7 @@ public class GPS extends AppCompatActivity {
                         return true;
                     case R.id.logout:
                         FirebaseAuth.getInstance().signOut();
-                        Intent intent = new Intent(GPS.this, Login.class);
+                        intent = new Intent(GPS.this, Login.class);
                         startActivity(intent);
                         finish();
                         return true;

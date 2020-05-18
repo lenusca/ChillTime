@@ -4,5 +4,6 @@
     <string name="Close">Close</string>
     <string name="facebook_app_id">234499314481967</string>
     <string name="fb_login_protocol_scheme">fb234499314481967</string>
+    <string name="genre">Genre</string>
 
 </resources>
