@@ -11,12 +11,14 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Series"
+        <activity android:name=".Details"/>
+        <activity android:name=".DashBoard" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Series"
             android:enabled="true"
             android:icon="@drawable/home"
             android:label="Series"
-            android:roundIcon="@drawable/home"
-            />
+            android:roundIcon="@drawable/home" />
         <activity
             android:name=".Movies"
             android:enabled="true"

@@ -88,7 +88,7 @@ public class Login extends AppCompatActivity {
         // verificar se está já login, isto quando tiver a parte do menu colocar a ir para la
         if(mAuth.getCurrentUser() != null){
             // mandar para o menu
-            Intent intent = new Intent(Login.this, GPS.class);
+            Intent intent = new Intent(Login.this, DashBoard.class);
             startActivity(intent);
             finish();
         }
@@ -178,7 +178,7 @@ public class Login extends AppCompatActivity {
                             // Se conseguiu registar o utilizador
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(Login.this,"Authentication successfully!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Login.this, GPS.class);
+                            Intent intent = new Intent(Login.this, DashBoard.class);
                             startActivity(intent);
                             //updateUI(user);
                         } else {
@@ -270,7 +270,7 @@ public class Login extends AppCompatActivity {
                                             // documento existe, logo não é preciso adicionar
                                             if (documentSnapshot.exists()) {
                                                 // Ir para o menu
-                                                Intent intent = new Intent(Login.this, GPS.class);
+                                                Intent intent = new Intent(Login.this, DashBoard.class);
                                                 startActivity(intent);
                                             } else {
                                                 Map<String, Object> userData = new HashMap<>();
@@ -285,7 +285,7 @@ public class Login extends AppCompatActivity {
                                                     }
                                                 });
                                                 // Ir para o menu
-                                                Intent intent = new Intent(Login.this, GPS.class);
+                                                Intent intent = new Intent(Login.this, DashBoard.class);
                                                 startActivity(intent);
                                             }
                                         }
@@ -325,7 +325,7 @@ public class Login extends AppCompatActivity {
                                           // documento existe, logo não é preciso criar novo
                                           if(documentSnapshot.exists()){
                                               // Vai para o menu
-                                              Intent intent = new Intent(Login.this, GPS.class);
+                                              Intent intent = new Intent(Login.this, DashBoard.class);
                                               startActivity(intent);
                                           }
                                           // cria um novo documento, com o id do utilizador
@@ -342,7 +342,7 @@ public class Login extends AppCompatActivity {
                                                   }
                                               });
                                               // Ir para o menu
-                                              Intent intent = new Intent(Login.this, GPS.class);
+                                              Intent intent = new Intent(Login.this, DashBoard.class);
                                               startActivity(intent);
                                           }
                                       }

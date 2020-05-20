@@ -28,8 +28,22 @@ public class DashBoard extends AppCompatActivity {
     }
 
 
-    public void onClickMovies(View view) {
+    public void GPS(View view) {
         Intent intent = new Intent(this, GPS.class);
         startActivity(intent);
+        DashBoard.this.finish();
+    }
+
+    public void Movies(View view) {
+        Intent intent = new Intent(this, Movies.class);
+        startActivity(intent);
+        DashBoard.this.finish();
+    }
+
+
+    public void Series(View view) {
+        Intent intent = new Intent(this, Series.class);
+        startActivity(intent);
+        DashBoard.this.finish();
     }
 }
