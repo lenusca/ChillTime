@@ -46,4 +46,10 @@ public class DashBoard extends AppCompatActivity {
         startActivity(intent);
         DashBoard.this.finish();
     }
+
+    public void QRCode(View view) {
+        Intent intent = new Intent(this, Details.class);
+        startActivity(intent);
+        DashBoard.this.finish();
+    }
 }

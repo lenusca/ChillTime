@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFFDFD"
+    tools:context=".Details">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFDFD">
+
+        <ImageView
+            android:id="@+id/secondImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/sidebar" />
+
+        <ImageButton
+            android:id="@+id/videoButton"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="164dp"
+            android:background="@drawable/button_rounded"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.867"
+            app:layout_constraintStart_toEndOf="@+id/firstImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_media_play" />
+
+        <ImageButton
+            android:id="@+id/addFavorites"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:tint="@android:color/transparent"
+            app:layout_constraintBottom_toTopOf="@+id/justifyTextView"
+            app:layout_constraintEnd_toStartOf="@+id/videoButton"
+            app:layout_constraintHorizontal_bias="0.517"
+            app:layout_constraintStart_toEndOf="@+id/addViews"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.701"
+            app:srcCompat="@drawable/addfavorite" />
+
+        <ImageButton
+            android:id="@+id/addViews"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="152dp"
+            android:layout_marginRight="152dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toTopOf="@+id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.948"
+            app:layout_constraintStart_toEndOf="@+id/firstImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.868"
+            app:srcCompat="@drawable/addwatch" />
+
+        <ImageView
+            android:id="@+id/firstImage"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="120dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.056"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/user" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Frozen"
+            android:textSize="30sp"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="2sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.115"
+            app:layout_constraintStart_toEndOf="@+id/firstImage"
+            app:layout_constraintTop_toBottomOf="@+id/releaseDate" />
+
+        <me.biubiubiu.justifytext.library.JustifyTextView
+            android:id="@+id/justifyTextView"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="When Tony Stark tries to jumpstart a dormant peacekeeping program, things go awry and Earth’s Mightiest Heroes are put to the ultimate test as the fate of the planet hangs in the balance. As the villainous Ultron emerges, it is up to The Avengers to stop him from enacting his terrible plans, and soon uneasy alliances and unexpected action pave the way for an epic and unique global adventure."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.625"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/firstImage" />
+
+        <TextView
+            android:id="@+id/releaseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="16dp"
+            android:text="2020"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/videoButton"
+            app:layout_constraintHorizontal_bias="0.14"
+            app:layout_constraintStart_toEndOf="@+id/firstImage"
+            app:layout_constraintTop_toBottomOf="@+id/secondImage" />
+
+        <TextView
+            android:id="@+id/genreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="20dp"
+            android:text="Genres: "
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/justifyTextView" />
+
+        <TextView
+            android:id="@+id/genres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
+            android:text="Romance, Comedy"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.071"
+            app:layout_constraintStart_toEndOf="@+id/genreLabel"
+            app:layout_constraintTop_toBottomOf="@+id/justifyTextView" />
+
+        <TextView
+            android:id="@+id/companiesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="24dp"
+            android:text=" Companies : "
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/genreLabel" />
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="31dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.137"
+            app:layout_constraintStart_toEndOf="@+id/companiesLabel"
+            app:layout_constraintTop_toBottomOf="@+id/genres">
+
+            <ImageView
+                android:id="@+id/companie1"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/companie2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/companie3"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/companie4"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="centerInside" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

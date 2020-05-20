@@ -208,6 +208,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                                         }
 
                                     }
+                                    System.out.println(serieId);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -227,7 +228,8 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                     }
                 });
                 mQueue.add(request);
-                return false;
+
+                return true;
             }
 
             @Override

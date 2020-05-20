@@ -1,6 +1,7 @@
 package com.example.chilltime;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -54,6 +55,8 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
     List<Integer> favoritesUser;
     List<Integer> watchesUser;
     DocumentReference documentReference;
+    // Para mandar o id para outra activity(details)
+    public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
     public AdapterMovies(Context context, List<String> names, List<String> images, List<Integer> ids, List<Integer> idsFavorites, List<Integer> idsWatches){
         this.names = names;
@@ -90,7 +93,6 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
         if(watchesUser.contains(ids.get(position).longValue())){
             holder.addWatch.setImageResource(R.drawable.removewatch);
         }
-
 
         // para ir buscar a imagem a partir do url
         Picasso.get().load("https://image.tmdb.org/t/p/original/"+images.get(position)).into(holder.movieImage);
@@ -158,6 +160,16 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
                     holder.addWatch.setImageResource(R.drawable.addwatch);
 
                 }
+            }
+        });
+        // Ver detalhes do filme
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // enviar para a actividade dos detalhes o id do movie
+                Intent intent = new Intent(context, Details.class);
+                intent.putExtra(EXTRA_MESSAGE, ids.get(position).toString());
+                context.startActivity(intent);
             }
         });
     }

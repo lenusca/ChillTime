@@ -233,7 +233,8 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                     }
                 });
                 mQueue.add(request);
-                return false;
+
+                return true;
             }
 
             @Override
