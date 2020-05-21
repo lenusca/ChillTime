@@ -13,6 +13,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Details" android:label="Movie Details" android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".DashBoard" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".MovieList" android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".Series"
             android:enabled="true"
