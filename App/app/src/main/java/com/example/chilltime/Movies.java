@@ -64,7 +64,11 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
     List<String> movieImage;
     List<Integer> movieId;
     List<Integer> idsFavorites;
+    List<String> imageFavorites;
     List<Integer> idsWatches;
+    List<String> imageWatches;
+    long timeWatches;
+
     AdapterMovies adapter;
     RecyclerView dataList;
     // Botão dos géneros
@@ -106,17 +110,24 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                 // dizer o que quer ir buscar
                 String printname = "";
                 String printimage = "";
-                if(documentSnapshot.get("FavoritesMovie") == null){
+                if(documentSnapshot.get("FavoritesMovie") == null || documentSnapshot.get("FavoritesImagesMovie") == null ){
                     idsFavorites = new ArrayList<>();
+                    imageFavorites = new ArrayList<>();
+                    System.out.println(imageFavorites);
                 }
                 else{
                     idsFavorites = (List<Integer>) documentSnapshot.get("FavoritesMovie");
+                    imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesMovie");
                 }
-                if(documentSnapshot.get("WatchesMovies") == null){
+                if(documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesTime") == null){
                     idsWatches = new ArrayList<>();
+                    imageWatches = new ArrayList<>();
+                    timeWatches = 0;
                 }
                 else {
                     idsWatches = (List<Integer>) documentSnapshot.get("WatchesMovies");
+                    imageWatches = (List<String>) documentSnapshot.get("WatchesImagesMovies");
+                    timeWatches = (long) documentSnapshot.get("WatchesTime");
                 }
                 printname =documentSnapshot.getString("Name");
                 printimage = documentSnapshot.getString("Image");
@@ -218,7 +229,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                                     e.printStackTrace();
                                 }
                                 // mandar para o adapter que vai mandar para o reciclerview
-                                adapter = new AdapterMovies(Movies.this, movieName, movieImage, movieId, idsFavorites, idsWatches);
+                                adapter = new AdapterMovies(Movies.this, movieName, movieImage, movieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches);
                                 GridLayoutManager gridLayoutManager = new GridLayoutManager(Movies.this, 3, GridLayoutManager.VERTICAL, false);
                                 dataList.setLayoutManager(gridLayoutManager);
                                 // colocar os dados no view
@@ -282,7 +293,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                             e.printStackTrace();
                         }
                         // mandar para o adapter que vai mandar para o reciclerview
-                        adapter = new AdapterMovies(Movies.this, movieName, movieImage, movieId, idsFavorites, idsWatches);
+                        adapter = new AdapterMovies(Movies.this, movieName, movieImage, movieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches);
                         GridLayoutManager gridLayoutManager = new GridLayoutManager(Movies.this, 3, GridLayoutManager.VERTICAL, false);
                         dataList.setLayoutManager(gridLayoutManager);
                         // colocar os dados no view
