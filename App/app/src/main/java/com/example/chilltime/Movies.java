@@ -113,13 +113,12 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                 if(documentSnapshot.get("FavoritesMovie") == null || documentSnapshot.get("FavoritesImagesMovie") == null ){
                     idsFavorites = new ArrayList<>();
                     imageFavorites = new ArrayList<>();
-                    System.out.println(imageFavorites);
                 }
                 else{
                     idsFavorites = (List<Integer>) documentSnapshot.get("FavoritesMovie");
                     imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesMovie");
                 }
-                if(documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesTime") == null){
+                if(documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
                     idsWatches = new ArrayList<>();
                     imageWatches = new ArrayList<>();
                     timeWatches = 0;
@@ -127,7 +126,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                 else {
                     idsWatches = (List<Integer>) documentSnapshot.get("WatchesMovies");
                     imageWatches = (List<String>) documentSnapshot.get("WatchesImagesMovies");
-                    timeWatches = (long) documentSnapshot.get("WatchesTime");
+                    timeWatches = (long) documentSnapshot.get("WatchesMoviesTime");
                 }
                 printname =documentSnapshot.getString("Name");
                 printimage = documentSnapshot.getString("Image");
@@ -135,6 +134,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                 Picasso.get().load(printimage).into(image);
             }
         });
+
         choice = new ActionBarDrawerToggle(this, sidebar, R.string.Open, R.string.Close);
         choice.setDrawerIndicatorEnabled(true);
 
@@ -142,8 +142,6 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
         choice.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
 
         nav_view.setItemIconTintList(null);
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

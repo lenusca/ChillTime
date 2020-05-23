@@ -10,12 +10,21 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,17 +42,27 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
     FirebaseFirestore mStore;
     String userID;
     List<Integer> favoritesUser;
+    List<String> imagesFavoritesUser;
     List<Integer> watchesUser;
+    List<String> imagesWatchesUser;
     DocumentReference documentReference;
+    long timeWatches;
+    int time = 0;
+    //api
+    RequestQueue mQueue;
 
-    public AdapterSeries(Context context, List<String> names, List<String> images, List<Integer> ids, List<Integer> idsFavorites, List<Integer> idsWatches){
+
+    public AdapterSeries(Context context, List<String> names, List<String> images, List<Integer> ids, List<Integer> idsFavorites, List<String> imagesFavoritesUser, List<Integer> idsWatches, List<String> imagesWatchesUser, long timeWatches){
         this.names = names;
         this.context = context;
         this.images = images;
         this.ids = ids;
         this.inflater = LayoutInflater.from(context);
         this.favoritesUser = idsFavorites;
+        this.imagesFavoritesUser = imagesFavoritesUser;
         this.watchesUser = idsWatches;
+        this.imagesWatchesUser = imagesWatchesUser;
+        this.timeWatches = timeWatches;
 
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
@@ -83,7 +102,9 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
                 // Se não estiver já na bd, adiciona
                 if(holder.addFavorite.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.addfavorite).getConstantState())){
                     favoritesUser.add(ids.get(position));
+                    imagesFavoritesUser.add(images.get(position));
                     userFavorites.put("FavoritesSeries", favoritesUser);
+                    userFavorites.put("FavoritesImagesSeries", imagesFavoritesUser);
                     documentReference.set(userFavorites,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -94,8 +115,10 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
                 }
                 // Verificar se está adicionado, se estiver vai remover a bd se carregar de novo
                 else if(holder.addFavorite.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.removefavorite).getConstantState())){
-                    favoritesUser.removeAll(Collections.singleton(ids.get(position).longValue()));
+                    favoritesUser.removeAll(Collections.singleton(ids.get(position)));
+                    imagesFavoritesUser.removeAll(Collections.singleton(images.get(position)));
                     userFavorites.put("FavoritesSeries", favoritesUser);
+                    userFavorites.put("FavoritesImagesSeries", imagesFavoritesUser);
                     documentReference.set(userFavorites,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -111,33 +134,61 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
         holder.addWatch.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                // adicionar aos vistos o filme selecionado
-                Map<String, Object> userWatches = new HashMap<>();
-                // Se não estiver já na bd, adiciona
-                if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.addwatch).getConstantState())) {
-                    watchesUser.add(ids.get(position));
-                    userWatches.put("WatchesSeries", watchesUser);
-                    documentReference.set(userWatches, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            System.out.println("ADICIONADOOOO");
-                        }
-                    });
-                    holder.addWatch.setImageResource(R.drawable.removewatch);
-                }
-                // Verificar se está adicionado, se estiver vai remover a bd se carregar de novo
-                else if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.removewatch).getConstantState())){
-                    watchesUser.removeAll(Collections.singleton(ids.get(position).longValue()));
-                    userWatches.put("WatchesSeries", watchesUser);
-                    documentReference.set(userWatches,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            System.out.println("REMOVIDOOOO");
-                        }
-                    });
-                    holder.addWatch.setImageResource(R.drawable.addwatch);
+                // para saber quanto tempo dura a série, tenho de aceder a api novamente
+                mQueue = Volley.newRequestQueue(context);
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "https://api.themoviedb.org/3/tv/"+ids.get(position)+"?api_key=6458cccff38c4ec22f31df407f03048e&language=en-US", null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    time = response.getInt("number_of_episodes")*response.getJSONArray("episode_run_time").getInt(0);
+                                    // adicionar aos vistos series selecionado
+                                    Map<String, Object> userWatches = new HashMap<>();
+                                    // Se não estiver já na bd, adiciona
+                                    if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.addwatch).getConstantState())) {
+                                        watchesUser.add(ids.get(position));
+                                        imagesWatchesUser.add(images.get(position));
+                                        userWatches.put("WatchesSeries", watchesUser);
+                                        userWatches.put("WatchesImagesSeries", imagesWatchesUser);
+                                        timeWatches = timeWatches + time;
+                                        userWatches.put("WatchesSeriesTime", timeWatches);
+                                        documentReference.set(userWatches, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                System.out.println("ADICIONADOOOO");
+                                            }
+                                        });
+                                        holder.addWatch.setImageResource(R.drawable.removewatch);
+                                    }
+                                    // Verificar se está adicionado, se estiver vai remover a bd se carregar de novo
+                                    else if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.removewatch).getConstantState())){
+                                        watchesUser.removeAll(Collections.singleton(ids.get(position)));
+                                        imagesWatchesUser.removeAll(Collections.singleton(images.get(position)));
+                                        userWatches.put("WatchesSeries", watchesUser);
+                                        userWatches.put("WatchesImagesSeries", imagesWatchesUser);
+                                        timeWatches = timeWatches - time;
+                                        userWatches.put("WatchesSeriesTime", timeWatches);
+                                        documentReference.set(userWatches,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                System.out.println("REMOVIDOOOO");
+                                            }
+                                        });
+                                        holder.addWatch.setImageResource(R.drawable.addwatch);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
 
-                }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("ERROR");
+                        error.printStackTrace();
+                    }
+                });
+                mQueue.add(request);
             }
         });
     }

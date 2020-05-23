@@ -118,7 +118,6 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
                 // Se não estiver já na bd, adiciona
                 if(holder.addFavorite.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.addfavorite).getConstantState())){
                     favoritesUser.add(ids.get(position));
-                    System.out.println(imagesFavoritesUser);
                     imagesFavoritesUser.add(images.get(position));
                     userFavorites.put("FavoritesMovie", favoritesUser);
                     userFavorites.put("FavoritesImagesMovie", imagesFavoritesUser);
@@ -171,7 +170,7 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
                                         userWatches.put("WatchesMovies", watchesUser);
                                         userWatches.put("WatchesImagesMovies", imagesWatchesUser);
                                         timeWatches = timeWatches + time;
-                                        userWatches.put("WatchesTime", timeWatches);
+                                        userWatches.put("WatchesMoviesTime", timeWatches);
                                         documentReference.set(userWatches, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -187,7 +186,7 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
                                         userWatches.put("WatchesMovies", watchesUser);
                                         userWatches.put("WatchesImagesMovies", imagesWatchesUser);
                                         timeWatches = timeWatches - time;
-                                        userWatches.put("WatchesTime", timeWatches);
+                                        userWatches.put("WatchesMoviesTime", timeWatches);
                                         documentReference.set(userWatches,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {

@@ -61,7 +61,11 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
     List<String> serieImage;
     List<Integer> serieId;
     List<Integer> idsFavorites;
+    List<String> imageFavorites;
     List<Integer> idsWatches;
+    List<String> imageWatches;
+    long timeWatches;
+
     AdapterSeries adapter;
     RecyclerView dataList;
     // Botão dos géneros
@@ -79,6 +83,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
         genreList = findViewById(R.id.choose_genre);
         genreList.setOnItemSelectedListener(this);
         searchSerie = findViewById(R.id.search_serie);
+
         // SideBar
         sidebar = (DrawerLayout)findViewById(R.id.sidebar);
         final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
@@ -101,14 +106,18 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                 // dizer o que quer ir buscar
                 String printname = "";
                 String printimage = "";
-                if(documentSnapshot.get("FavoritesSeries") == null){
+                if(documentSnapshot.get("FavoritesSeries") == null || documentSnapshot.get("FavoritesImagesSeries") == null){
                     idsFavorites = new ArrayList<>();
+                    imageFavorites = new ArrayList<>();
                 }
                 else{
                     idsFavorites = (List<Integer>) documentSnapshot.get("FavoritesSeries");
+                    imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesSeries");
                 }
-                if(documentSnapshot.get("WatchesSeries") == null){
+                if(documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesSeriesTime") == null){
                     idsWatches = new ArrayList<>();
+                    imageWatches = new ArrayList<>();
+                    timeWatches = 0;
                 }
                 else {
                     idsWatches = (List<Integer>) documentSnapshot.get("WatchesSeries");
@@ -119,6 +128,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                 Picasso.get().load(printimage).into(image);
             }
         });
+
         choice = new ActionBarDrawerToggle(this, sidebar, R.string.Open, R.string.Close);
         choice.setDrawerIndicatorEnabled(true);
 
@@ -126,7 +136,6 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
         choice.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         nav_view.setItemIconTintList(null);
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -213,7 +222,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                                     e.printStackTrace();
                                 }
                                 // mandar para o adapter que vai mandar para o reciclerview
-                                adapter = new AdapterSeries(Series.this, serieName, serieImage, serieId, idsFavorites, idsWatches);
+                                adapter = new AdapterSeries(Series.this, serieName, serieImage, serieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches);
                                 GridLayoutManager gridLayoutManager = new GridLayoutManager(Series.this, 3, GridLayoutManager.VERTICAL, false);
                                 dataList.setLayoutManager(gridLayoutManager);
                                 // colocar os dados no view
@@ -239,6 +248,11 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        return choice.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+    
     private void getSeries(String genre) {
         serieId.clear();
         serieImage.clear();
@@ -271,7 +285,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                             e.printStackTrace();
                         }
                         // mandar para o adapter que vai mandar para o reciclerview
-                        adapter = new AdapterSeries(Series.this, serieName, serieImage, serieId, idsFavorites, idsWatches);
+                        adapter = new AdapterSeries(Series.this, serieName, serieImage, serieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches);
                         GridLayoutManager gridLayoutManager = new GridLayoutManager(Series.this, 3, GridLayoutManager.VERTICAL, false);
                         dataList.setLayoutManager(gridLayoutManager);
                         // colocar os dados no view
