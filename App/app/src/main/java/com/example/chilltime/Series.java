@@ -121,6 +121,9 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                 }
                 else {
                     idsWatches = (List<Integer>) documentSnapshot.get("WatchesSeries");
+                    imageWatches = new ArrayList<>();
+                    timeWatches = (long) documentSnapshot.get("WatchesSeriesTime");
+
                 }
                 printname =documentSnapshot.getString("Name");
                 printimage = documentSnapshot.getString("Image");

@@ -52,7 +52,6 @@ dependencies {
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
 
-
 }
 
 apply plugin: 'com.android.application'

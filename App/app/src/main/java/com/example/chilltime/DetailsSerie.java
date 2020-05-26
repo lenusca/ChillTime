@@ -4,8 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageButton;
@@ -40,14 +40,10 @@ import java.util.regex.Pattern;
 
 import me.biubiubiu.justifytext.library.JustifyTextView;
 
-public class DetailsMovie extends AppCompatActivity {
-    // Intent
-    String idMovie; // usado no firebase
-    // Buscar os dados
-    RequestQueue mQueue;
+public class DetailsSerie extends AppCompatActivity {
     // Views
     ImageView backgroundImage;
-    ImageView movieImage;
+    ImageView serieImage;
     TextView title;
     TextView releaseDate;
     JustifyTextView overview;
@@ -59,6 +55,11 @@ public class DetailsMovie extends AppCompatActivity {
     ImageButton favoriteButton;
     ImageButton watchButton;
     TextView runtime;
+    TextView seasons;
+    TextView episodes;
+    // API
+    String idSerie;
+    RequestQueue mQueue;
     // Firebase
     String image;
     FirebaseAuth mAuth;
@@ -80,13 +81,10 @@ public class DetailsMovie extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
-        // Receber o id
-        Intent intent = getIntent();
-        idMovie = intent.getStringExtra(AdapterMovies.EXTRA_MESSAGE).toString();
-        // Views
+        setContentView(R.layout.activity_details_serie);
+        //Views
         backgroundImage = findViewById(R.id.secondImage);
-        movieImage = findViewById(R.id.firstImage);
+        serieImage = findViewById(R.id.firstImage);
         title = findViewById(R.id.title);
         releaseDate = findViewById(R.id.releaseDate);
         overview = findViewById(R.id.justifyTextView);
@@ -98,6 +96,12 @@ public class DetailsMovie extends AppCompatActivity {
         favoriteButton = findViewById(R.id.addFavorites);
         watchButton = findViewById(R.id.addViews);
         runtime = findViewById(R.id.runtimeValue);
+        seasons = findViewById(R.id.seasons);
+        episodes = findViewById(R.id.episodes);
+
+        // receber o id da serie
+        Intent intent = getIntent();
+        idSerie = intent.getStringExtra(AdapterSeries.EXTRA_MESSAGE);
 
         // Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -107,57 +111,57 @@ public class DetailsMovie extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>(){
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(documentSnapshot.get("FavoritesMovie") == null || documentSnapshot.get("FavoritesImagesMovie") == null ){
+                if(documentSnapshot.get("FavoritesSeries") == null || documentSnapshot.get("FavoritesImagesSeries") == null ){
                     idsFavorites = new ArrayList<>();
                     imageFavorites = new ArrayList<>();
                 }
                 else{
-                    idsFavorites = (List<Long>) documentSnapshot.get("FavoritesMovie");
-                    imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesMovie");
+                    idsFavorites = (List<Long>) documentSnapshot.get("FavoritesSeries");
+                    imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesSeries");
                     // Aparece o emoji preenchido ou o outro
-                    if(idsFavorites.contains(Long.parseLong(idMovie))){
+                    if(idsFavorites.contains(Long.parseLong(idSerie))){
                         favoriteButton.setImageResource(R.drawable.removefavorite);
                     }
                 }
-                if(documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
+                if(documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesMoviesTime") == null){
                     idsWatches = new ArrayList<>();
                     imageWatches = new ArrayList<>();
                     timeWatches = 0;
                 }
                 else {
-                    idsWatches = (List<Long>) documentSnapshot.get("WatchesMovies");
-                    imageWatches = (List<String>) documentSnapshot.get("WatchesImagesMovies");
-                    timeWatches = (long) documentSnapshot.get("WatchesMoviesTime");
-                    if(idsWatches.contains(Long.parseLong(idMovie))){
+                    idsWatches = (List<Long>) documentSnapshot.get("WatchesSeries");
+                    imageWatches = (List<String>) documentSnapshot.get("WatchesImagesSeries");
+                    timeWatches = (long) documentSnapshot.get("WatchesSeriesTime");
+                    if(idsWatches.contains(Long.parseLong(idSerie))){
                         watchButton.setImageResource(R.drawable.removewatch);
                     }
                 }
             }
         });
 
-        // API dos filmes, buscar detalhes do filme e atualisar na view respetiva
+        // show details
         mQueue = Volley.newRequestQueue(this);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "https://api.themoviedb.org/3/movie/"+idMovie+"?api_key=6458cccff38c4ec22f31df407f03048e&language=en-US", null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "https://api.themoviedb.org/3/tv/"+idSerie+"?api_key=6458cccff38c4ec22f31df407f03048e&language=en-US", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             Picasso.get().load("https://image.tmdb.org/t/p/original/"+response.getString("backdrop_path")).into(backgroundImage);
                             image = response.getString("poster_path");
-                            Picasso.get().load("https://image.tmdb.org/t/p/original/"+response.getString("poster_path")).into(movieImage);
-                            if(response.getString("original_title").contains(":")){
-                                title.setText(response.getString("original_title").split(":")[0]);
+                            Picasso.get().load("https://image.tmdb.org/t/p/original/"+response.getString("poster_path")).into(serieImage);
+                            if(response.getString("original_name").contains(":")){
+                                title.setText(response.getString("original_name").split(":")[0]);
                             }
-                            else if(response.getString("original_title").contains("(")){
-                                title.setText(response.getString("original_title").split(Pattern.quote("("))[0]);
+                            else if(response.getString("original_name").contains("(")){
+                                title.setText(response.getString("original_name").split(Pattern.quote("("))[0]);
                             }
                             else{
-                                title.setText(response.getString("original_title"));
+                                title.setText(response.getString("original_name"));
                             }
-                            releaseDate.setText(response.getString("release_date").split("-")[0]);
+                            releaseDate.setText(response.getString("first_air_date").split("-")[0]);
                             overview.setText(response.getString("overview"));
-                            time = response.getInt("runtime");
-                            runtime.setText(Integer.toString(time)+"min");
+                            time = response.getInt("number_of_episodes")*response.getJSONArray("episode_run_time").getInt(0);
+                            runtime.setText(Integer.toString(response.getJSONArray("episode_run_time").getInt(0))+"min");
                             String genresString="";
                             genresString = response.getJSONArray("genres").getJSONObject(0).getString("name");
                             // se tiver mais do que 2 generos
@@ -165,14 +169,11 @@ public class DetailsMovie extends AppCompatActivity {
                                 for(int i=1; i<response.getJSONArray("genres").length(); i++){
                                     genresString = genresString + ", " + response.getJSONArray("genres").getJSONObject(i).get("name");
                                 }
-
                             }
                             genres.setText(genresString);
-                            //
                             int companies =1;
                             for(int i=0; i<response.getJSONArray("production_companies").length(); i++){
                                 if(response.getJSONArray("production_companies").getJSONObject(i).getString("logo_path") != "null"){
-                                    System.out.println(response.getJSONArray("production_companies").getJSONObject(i).get("logo_path"));
                                     if(companies == 1){
                                         Picasso.get().load("https://image.tmdb.org/t/p/original/"+response.getJSONArray("production_companies").getJSONObject(i).get("logo_path")).into(companie1);
                                     }
@@ -188,6 +189,8 @@ public class DetailsMovie extends AppCompatActivity {
                                     companies++;
                                 }
                             }
+                            seasons.setText(Integer.toString(response.getInt("number_of_seasons")));
+                            episodes.setText(Integer.toString(response.getInt("number_of_episodes")));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -202,18 +205,17 @@ public class DetailsMovie extends AppCompatActivity {
             }
         });
         mQueue.add(request);
-
     }
 
     // adicionar imagem, id ao firebase
     public void favorite(View view) {
         Map<String, Object> userFavorites = new HashMap<>();
         // Se não estiver já na bd, adiciona
-        if(favoriteButton.getDrawable().getConstantState().equals((DetailsMovie.this).getResources().getDrawable(R.drawable.addfavorite).getConstantState())){
+        if(favoriteButton.getDrawable().getConstantState().equals((DetailsSerie.this).getResources().getDrawable(R.drawable.addfavorite).getConstantState())){
             imageFavorites.add(image);
-            idsFavorites.add(Long.parseLong(idMovie));
-            userFavorites.put("FavoritesMovie", idsFavorites);
-            userFavorites.put("FavoritesImagesMovie", imageFavorites);
+            idsFavorites.add(Long.parseLong(idSerie));
+            userFavorites.put("FavoritesSeries", idsFavorites);
+            userFavorites.put("FavoritesImagesSeries", imageFavorites);
             documentReference.set(userFavorites,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -224,10 +226,10 @@ public class DetailsMovie extends AppCompatActivity {
         }
         // Verificar se está adicionado, se estiver vai remover a bd se carregar de novo
         else if(favoriteButton.getDrawable().getConstantState().equals(this.getResources().getDrawable(R.drawable.removefavorite).getConstantState())){
-            idsFavorites.removeAll(Collections.singleton(Long.parseLong(idMovie)));
+            idsFavorites.removeAll(Collections.singleton(Long.parseLong(idSerie)));
             imageFavorites.removeAll(Collections.singleton(image));
-            userFavorites.put("FavoritesMovie", idsFavorites);
-            userFavorites.put("FavoritesImagesMovie", imageFavorites);
+            userFavorites.put("FavoritesSeries", idsFavorites);
+            userFavorites.put("FavoritesImagesSeries", imageFavorites);
             documentReference.set(userFavorites,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -236,21 +238,19 @@ public class DetailsMovie extends AppCompatActivity {
             });
             favoriteButton.setImageResource(R.drawable.addfavorite);
         }
-
     }
 
     // adicionar imagem, id e o tempo ao firebase
     public void watch(View view) {
-        // adicionar aos vistos o filme selecionado
         Map<String, Object> userWatches = new HashMap<>();
         // Se não estiver já na bd, adiciona
-        if(watchButton.getDrawable().getConstantState().equals(DetailsMovie.this.getResources().getDrawable(R.drawable.addwatch).getConstantState())) {
-            idsWatches.add(Long.parseLong(idMovie));
+        if(watchButton.getDrawable().getConstantState().equals(DetailsSerie.this.getResources().getDrawable(R.drawable.addwatch).getConstantState())) {
+            idsWatches.add(Long.parseLong(idSerie));
             imageWatches.add(image);
-            userWatches.put("WatchesMovies", idsWatches);
-            userWatches.put("WatchesImagesMovies", imageWatches);
+            userWatches.put("WatchesSeries", idsWatches);
+            userWatches.put("WatchesImagesSeries", imageWatches);
             timeWatches = timeWatches + time;
-            userWatches.put("WatchesMoviesTime", timeWatches);
+            userWatches.put("WatchesSeriesTime", timeWatches);
             documentReference.set(userWatches, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -260,13 +260,13 @@ public class DetailsMovie extends AppCompatActivity {
             watchButton.setImageResource(R.drawable.removewatch);
         }
         // Verificar se está adicionado, se estiver vai remover a bd se carregar de novo
-        else if(watchButton.getDrawable().getConstantState().equals(DetailsMovie.this.getResources().getDrawable(R.drawable.removewatch).getConstantState())){
-            idsWatches.removeAll(Collections.singleton(Long.parseLong(idMovie)));
+        else if(watchButton.getDrawable().getConstantState().equals(DetailsSerie.this.getResources().getDrawable(R.drawable.removewatch).getConstantState())){
+            idsWatches.removeAll(Collections.singleton(Long.parseLong(idSerie)));
             imageWatches.removeAll(Collections.singleton(image));
-            userWatches.put("WatchesMovies", idsWatches);
-            userWatches.put("WatchesImagesMovies", imageWatches);
+            userWatches.put("WatchesSeries", idsWatches);
+            userWatches.put("WatchesImagesSeries", imageWatches);
             timeWatches = timeWatches - time;
-            userWatches.put("WatchesMoviesTime", timeWatches);
+            userWatches.put("WatchesSeriesTime", timeWatches);
             documentReference.set(userWatches,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -277,23 +277,23 @@ public class DetailsMovie extends AppCompatActivity {
         }
     }
 
-    // ver trailer
+    // ver o trailer
     public void watchVideo(View view) {
         // Feedback visual quando carrega no botão
         view.startAnimation(buttonClick);
         // 1) ir buscar o id para o youtube, apartir da API
         mQueue = Volley.newRequestQueue(this);
-        // buscar os filmes todos apartir do genero, do mais famoso para o menos
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "https://api.themoviedb.org/3/movie/"+idMovie+"/videos?api_key=6458cccff38c4ec22f31df407f03048e&language=en-US", null,
+        // buscar os series todos apartir do genero, do mais famoso para o menos
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "https://api.themoviedb.org/3/tv/"+idSerie+"/videos?api_key=6458cccff38c4ec22f31df407f03048e&language=en-US", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             idYoutube = response.getJSONArray("results").getJSONObject(0).getString("key");
                             // 2) Mandar para a atividade que tem o videoview
-                            Intent intent = new Intent(DetailsMovie.this, PlayVideo.class);
+                            Intent intent = new Intent(DetailsSerie.this, PlayVideo.class);
                             intent.putExtra(EXTRA_MESSAGE, idYoutube);
-                            DetailsMovie.this.startActivity(intent);
+                            DetailsSerie.this.startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

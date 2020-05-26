@@ -1,6 +1,7 @@
 package com.example.chilltime;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,8 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
     int time = 0;
     //api
     RequestQueue mQueue;
+    // Para mandar o id para outra activity(details)
+    public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
 
     public AdapterSeries(Context context, List<String> names, List<String> images, List<Integer> ids, List<Integer> idsFavorites, List<String> imagesFavoritesUser, List<Integer> idsWatches, List<String> imagesWatchesUser, long timeWatches){
@@ -69,6 +72,7 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
         // ir buscar o identificador do utilizador
         userID = mAuth.getCurrentUser().getUid();
         documentReference = mStore.collection("Users").document(userID);
+
     }
 
     @NonNull
@@ -83,6 +87,7 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
     // Colocar a info na view
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+
         // verificar se a serie já se encontra na bd do user e se sim mudar o imagebutton
         if(favoritesUser.contains(ids.get(position).longValue())){
             holder.addFavorite.setImageResource(R.drawable.removefavorite);
@@ -189,6 +194,17 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
                     }
                 });
                 mQueue.add(request);
+            }
+        });
+
+        // ver detalhes da séries
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                // enviar para a atividade dos detalhes o id da série
+                Intent intent = new Intent(context, DetailsSerie.class);
+                intent.putExtra(EXTRA_MESSAGE, ids.get(position).toString());
+                context.startActivity(intent);
             }
         });
     }
