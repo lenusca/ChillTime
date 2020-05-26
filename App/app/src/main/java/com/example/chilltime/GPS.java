@@ -124,6 +124,7 @@ public class GPS extends AppCompatActivity {
 
     }
 
+    //sidebar
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         return choice.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);

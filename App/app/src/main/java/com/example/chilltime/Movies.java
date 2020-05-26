@@ -253,6 +253,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
+    //sidebar
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         return choice.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);

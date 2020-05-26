@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -33,11 +32,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -108,7 +105,7 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
 
         // para ir buscar a imagem a partir do url
         Picasso.get().load("https://image.tmdb.org/t/p/original/"+images.get(position)).into(holder.movieImage);
-
+        System.out.println(context.getResources().getDrawable(R.drawable.addfavorite).getConstantState());
         // guardar no firebase quando carrega na imagem e mudar o icon
         // Favoritos
         holder.addFavorite.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +129,7 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
                 // Verificar se está adicionado, se estiver vai remover a bd se carregar de novo
                 else if(holder.addFavorite.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.removefavorite).getConstantState())){
                     favoritesUser.removeAll(Collections.singleton(ids.get(position)));
+                    System.out.println(favoritesUser);
                     imagesFavoritesUser.removeAll(Collections.singleton(images.get(position)));
                     userFavorites.put("FavoritesMovie", favoritesUser);
                     userFavorites.put("FavoritesImagesMovie", imagesFavoritesUser);
@@ -142,7 +140,6 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
                         }
                     });
                     holder.addFavorite.setImageResource(R.drawable.addfavorite);
-
                 }
             }
         });
@@ -216,7 +213,7 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
             @Override
             public void onClick(View view) {
                 // enviar para a actividade dos detalhes o id do movie
-                Intent intent = new Intent(context, Details.class);
+                Intent intent = new Intent(context, DetailsMovie.class);
                 intent.putExtra(EXTRA_MESSAGE, ids.get(position).toString());
                 context.startActivity(intent);
             }

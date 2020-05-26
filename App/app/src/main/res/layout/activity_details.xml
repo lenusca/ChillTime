@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="#FFFDFD"
-    tools:context=".Details">
+    tools:context=".DetailsMovie">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,7 +34,9 @@
             app:layout_constraintHorizontal_bias="0.867"
             app:layout_constraintStart_toEndOf="@+id/firstImage"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_media_play" />
+            app:srcCompat="@android:drawable/ic_media_play"
+            android:clickable="true"
+            android:onClick="watchVideo"/>
 
         <ImageButton
             android:id="@+id/addFavorites"
@@ -42,14 +44,16 @@
             android:layout_height="32dp"
             android:background="@null"
             android:scaleType="fitXY"
-            android:tint="@android:color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/justifyTextView"
             app:layout_constraintEnd_toStartOf="@+id/videoButton"
             app:layout_constraintHorizontal_bias="0.517"
             app:layout_constraintStart_toEndOf="@+id/addViews"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.701"
-            app:srcCompat="@drawable/addfavorite" />
+            app:srcCompat="@drawable/addfavorite"
+            android:clickable="true"
+            android:onClick="favorite"
+            android:focusable="true" />
 
         <ImageButton
             android:id="@+id/addViews"
@@ -65,7 +69,9 @@
             app:layout_constraintStart_toEndOf="@+id/firstImage"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.868"
-            app:srcCompat="@drawable/addwatch" />
+            app:srcCompat="@drawable/addwatch"
+            android:clickable="true"
+            android:onClick="watch"/>
 
         <ImageView
             android:id="@+id/firstImage"
@@ -156,14 +162,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
             android:layout_marginTop="20dp"
-            android:text=" Companies : "
+            android:text="Companies : "
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/genres" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="200dp"
             android:layout_height="31dp"
             android:layout_marginTop="20dp"
@@ -203,6 +209,35 @@
                 android:layout_weight="1"
                 android:scaleType="centerInside" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/runtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="104dp"
+            android:text="Runtime:"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+        <TextView
+            android:id="@+id/runtimeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
+            android:text="190min"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.03"
+            app:layout_constraintStart_toEndOf="@+id/runtime"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

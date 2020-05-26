@@ -248,11 +248,12 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
+    //sidebar
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         return choice.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
-    
+
     private void getSeries(String genre) {
         serieId.clear();
         serieImage.clear();
