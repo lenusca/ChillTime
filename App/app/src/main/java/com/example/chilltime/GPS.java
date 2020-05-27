@@ -4,9 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +20,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -23,9 +41,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
-import static com.google.android.material.navigation.NavigationView.*;
 
-public class GPS extends AppCompatActivity {
+public class GPS extends AppCompatActivity implements OnMapReadyCallback {
     //SIDEBAR
     DrawerLayout sidebar;
     ActionBarDrawerToggle choice;
@@ -37,11 +54,24 @@ public class GPS extends AppCompatActivity {
     String userID;
     // Para mudar de activities
     Intent intent;
+    // Google Map
+    GoogleMap map;
+    Location currentLocation;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    final int REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //MAP
         setContentView(R.layout.activity_g_p_s);
+        requestPermissions();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fetchLastLocation();
+        // quando estiver pronto para carregar
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         sidebar = (DrawerLayout)findViewById(R.id.sidebar);
         final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
         View headerView = nav_view.getHeaderView(0);
@@ -126,10 +156,60 @@ public class GPS extends AppCompatActivity {
 
     }
 
+    private void fetchLastLocation() {
+
+    }
+
     //sidebar
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         return choice.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case REQUEST_CODE:
+                if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    fetchLastLocation();
+                }
+                break;
+        }
+    }
+
+    public void requestPermissions(){
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            return;
+        }
+
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    System.out.println(location.getLatitude());
+                    System.out.println(location.getLongitude());
+                    currentLocation = location;
+                    LatLng userLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                    map.addMarker(new MarkerOptions().position(userLocation).title("User"));
+                    map.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11));
+
+                }
+            }
+        });
+
+
+        // Add a marker in Sydney, Australia, and move the camera.
+        LatLng sydney = new LatLng(-34, 151);
+        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+
     }
 
 

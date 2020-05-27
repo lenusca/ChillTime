@@ -7,6 +7,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 public class DashBoard extends AppCompatActivity {
 
     Button btMovies, btSeries, btGPS, btQrCode, btUserActivity, btSettings;
@@ -24,11 +27,11 @@ public class DashBoard extends AppCompatActivity {
         btUserActivity = findViewById(R.id.btUserActivity);
         btSettings = findViewById(R.id.btSettings);
 
-
     }
 
 
     public void GPS(View view) {
+        //isServiceOK();
         Intent intent = new Intent(this, GPS.class);
         startActivity(intent);
         DashBoard.this.finish();
@@ -61,5 +64,15 @@ public class DashBoard extends AppCompatActivity {
         Intent intent = new Intent(this, User.class);
         startActivity(intent);
         DashBoard.this.finish();
+    }
+
+    // GOOGLE MAPS
+    public boolean isServiceOK(){
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(DashBoard.this);
+        if(available == ConnectionResult.SUCCESS){
+            System.out.println("Google play service is working");
+            return true;
+        }
+        return false;
     }
 }
