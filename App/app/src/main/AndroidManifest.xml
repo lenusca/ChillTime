@@ -22,7 +22,9 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Settings"></activity>
+        <activity android:name=".User"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Settings"/>
         <activity
             android:name=".SeriesCreateAccountActivity"
             android:theme="@style/AppTheme.NoActionBar" />

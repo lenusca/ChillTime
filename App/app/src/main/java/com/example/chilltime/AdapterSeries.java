@@ -35,16 +35,16 @@ import java.util.Map;
 public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder> {
     List<String> names;
     List<String> images;
-    List<Integer> ids;
+    List<Long> ids;
     Context context;
     LayoutInflater inflater;
     // User
     FirebaseAuth mAuth;
     FirebaseFirestore mStore;
     String userID;
-    List<Integer> favoritesUser;
+    List<Long> favoritesUser;
     List<String> imagesFavoritesUser;
-    List<Integer> watchesUser;
+    List<Long> watchesUser;
     List<String> imagesWatchesUser;
     DocumentReference documentReference;
     long timeWatches;
@@ -55,7 +55,7 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
     public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
 
-    public AdapterSeries(Context context, List<String> names, List<String> images, List<Integer> ids, List<Integer> idsFavorites, List<String> imagesFavoritesUser, List<Integer> idsWatches, List<String> imagesWatchesUser, long timeWatches){
+    public AdapterSeries(Context context, List<String> names, List<String> images, List<Long> ids, List<Long> idsFavorites, List<String> imagesFavoritesUser, List<Long> idsWatches, List<String> imagesWatchesUser, long timeWatches){
         this.names = names;
         this.context = context;
         this.images = images;
@@ -89,10 +89,10 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         // verificar se a serie já se encontra na bd do user e se sim mudar o imagebutton
-        if(favoritesUser.contains(ids.get(position).longValue())){
+        if(favoritesUser.contains(ids.get(position))){
             holder.addFavorite.setImageResource(R.drawable.removefavorite);
         }
-        if(watchesUser.contains(ids.get(position).longValue())){
+        if(watchesUser.contains(ids.get(position))){
             holder.addWatch.setImageResource(R.drawable.removewatch);
         }
 

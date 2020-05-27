@@ -27,6 +27,10 @@
         <item name="android:listPreferredItemPaddingRight">40dp</item>
         <item name="listPreferredItemPaddingRight">40dp</item>
     </style>
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!-- Customize color of navigation drawer icon and back arrow -->
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
 
 
 </resources>

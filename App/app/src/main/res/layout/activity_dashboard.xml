@@ -225,10 +225,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textColorHighlight="#FFFFFF"
-                android:textColorHint="#FFFFFF"
-                android:textColorLink="#FFFFFF" />
+                android:onClick="UserActivity"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -268,10 +265,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textColorHighlight="#FFFFFF"
-                android:textColorHint="#FFFFFF"
-                android:textColorLink="#FFFFFF"
                 android:onClick="Settings"/>
 
             <RelativeLayout

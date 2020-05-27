@@ -52,6 +52,7 @@ dependencies {
     implementation 'me.biubiubiu.justifytext:library:1.1'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'com.google.android.material:material:1.1.0'
+    compile 'com.polyak:icon-switch:1.0.0'
 
 
 }

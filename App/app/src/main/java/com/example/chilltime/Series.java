@@ -59,10 +59,10 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
     RequestQueue mQueue;
     List<String> serieName;
     List<String> serieImage;
-    List<Integer> serieId;
-    List<Integer> idsFavorites;
+    List<Long> serieId;
+    List<Long> idsFavorites;
     List<String> imageFavorites;
-    List<Integer> idsWatches;
+    List<Long> idsWatches;
     List<String> imageWatches;
     long timeWatches;
 
@@ -111,7 +111,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                     imageFavorites = new ArrayList<>();
                 }
                 else{
-                    idsFavorites = (List<Integer>) documentSnapshot.get("FavoritesSeries");
+                    idsFavorites = (List<Long>) documentSnapshot.get("FavoritesSeries");
                     imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesSeries");
                 }
                 if(documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesSeriesTime") == null){
@@ -120,8 +120,8 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                     timeWatches = 0;
                 }
                 else {
-                    idsWatches = (List<Integer>) documentSnapshot.get("WatchesSeries");
-                    imageWatches = new ArrayList<>();
+                    idsWatches = (List<Long>) documentSnapshot.get("WatchesSeries");
+                    imageWatches = (List<String>) documentSnapshot.get("WatchesImagesSeries");
                     timeWatches = (long) documentSnapshot.get("WatchesSeriesTime");
 
                 }
@@ -166,7 +166,9 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                         Toast.makeText(Series.this, "QR Code",Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.userinfo:
-                        Toast.makeText(Series.this, "User Activities",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(Series.this, User.class);
+                        startActivity(intent);
+                        Series.this.finish();
                         return true;
                     case R.id.settings:
                         Toast.makeText(Series.this, "Settings",Toast.LENGTH_SHORT).show();
@@ -212,7 +214,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                                         JSONObject serieData = results.getJSONObject(i);
                                         if(!serieData.getString("poster_path").equals("null")){
                                             //id
-                                            serieId.add(serieData.getInt("id"));
+                                            serieId.add(serieData.getLong("id"));
                                             //name
                                             serieName.add(serieData.getString("name"));
                                             //image
@@ -277,7 +279,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                                 JSONObject serieData = results.getJSONObject(i);
                                 if(!serieData.getString("poster_path").equals("null")){
                                     //id
-                                    serieId.add(serieData.getInt("id"));
+                                    serieId.add(serieData.getLong("id"));
                                     //name
                                     serieName.add(serieData.getString("name"));
                                     //image

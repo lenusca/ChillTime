@@ -39,10 +39,10 @@ public class MoviesCreateAccountActivity extends AppCompatActivity implements Ad
     private List<String> idsGenreMovie = new ArrayList<>();
     List<String> names = new LinkedList<>();  //nome do movie
     List<String> images = new LinkedList<>(); //imagem do movie
-    List<Integer> idsMovie = new LinkedList<>(); //id do movie
-    List<Integer> idsFavorites = new LinkedList<>(); //ids dos movies favoritos
+    List<Long> idsMovie = new LinkedList<>(); //id do movie
+    List<Long> idsFavorites = new LinkedList<>(); //ids dos movies favoritos
     List<String> imagesFavoritesUser = new LinkedList<>(); //imagens dos filmes favoritos do user
-    List<Integer> idsWatches = new LinkedList<>(); //ids dos movies vistos pelo user
+    List<Long> idsWatches = new LinkedList<>(); //ids dos movies vistos pelo user
     List<String> imagesWatchesUser= new LinkedList<>(); //imagens dos filmes vistos pelo user
     long timeWatches = 0;
     //XML
@@ -130,7 +130,7 @@ public class MoviesCreateAccountActivity extends AppCompatActivity implements Ad
                             JSONObject movieData = results.getJSONObject(i);
                             if(!movieData.getString("poster_path").equals("null")){
                                 //id
-                                idsMovie.add(Integer.parseInt(movieData.getString("id")));
+                                idsMovie.add(movieData.getLong("id"));
                                 //image
                                 images.add(movieData.getString("poster_path"));
                                 //nome

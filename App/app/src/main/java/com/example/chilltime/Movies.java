@@ -62,10 +62,10 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
     RequestQueue mQueue;
     List<String> movieName;
     List<String> movieImage;
-    List<Integer> movieId;
-    List<Integer> idsFavorites;
+    List<Long> movieId;
+    List<Long> idsFavorites;
     List<String> imageFavorites;
-    List<Integer> idsWatches;
+    List<Long> idsWatches;
     List<String> imageWatches;
     long timeWatches;
 
@@ -115,7 +115,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                     imageFavorites = new ArrayList<>();
                 }
                 else{
-                    idsFavorites = (List<Integer>) documentSnapshot.get("FavoritesMovie");
+                    idsFavorites = (List<Long>) documentSnapshot.get("FavoritesMovie");
                     imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesMovie");
                 }
                 if(documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
@@ -124,7 +124,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                     timeWatches = 0;
                 }
                 else {
-                    idsWatches = (List<Integer>) documentSnapshot.get("WatchesMovies");
+                    idsWatches = (List<Long>) documentSnapshot.get("WatchesMovies");
                     imageWatches = (List<String>) documentSnapshot.get("WatchesImagesMovies");
                     timeWatches = (long) documentSnapshot.get("WatchesMoviesTime");
                 }
@@ -169,7 +169,9 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                         Toast.makeText(Movies.this, "QR Code",Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.userinfo:
-                        Toast.makeText(Movies.this, "User Activities",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(Movies.this, User.class);
+                        startActivity(intent);
+                        Movies.this.finish();
                         return true;
                     case R.id.settings:
                         Toast.makeText(Movies.this, "Settings",Toast.LENGTH_SHORT).show();
@@ -215,7 +217,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                                         JSONObject movieData = results.getJSONObject(i);
                                         if(!movieData.getString("poster_path").equals("null")){
                                             //id
-                                            movieId.add(movieData.getInt("id"));
+                                            movieId.add(movieData.getLong("id"));
                                             //name
                                             movieName.add(movieData.getString("title"));
                                             //image
@@ -281,7 +283,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                                 JSONObject movieData = results.getJSONObject(i);
                                 if(!movieData.getString("poster_path").equals("null")){
                                     //id
-                                    movieId.add(movieData.getInt("id"));
+                                    movieId.add(movieData.getLong("id"));
                                     //name
                                     movieName.add(movieData.getString("title"));
                                     //image
