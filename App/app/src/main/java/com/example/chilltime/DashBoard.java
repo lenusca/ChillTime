@@ -52,4 +52,10 @@ public class DashBoard extends AppCompatActivity {
         startActivity(intent);
         DashBoard.this.finish();
     }
+
+    public void Settings(View view) {
+        Intent intent = new Intent(this, SeriesCreateAccountActivity.class);
+        startActivity(intent);
+        DashBoard.this.finish();
+    }
 }

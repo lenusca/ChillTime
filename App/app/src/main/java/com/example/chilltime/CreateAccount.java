@@ -47,7 +47,7 @@ public class CreateAccount extends AppCompatActivity {
         password = findViewById(R.id.Password);
         confirmPassword = findViewById(R.id.confirm_password);
         confirm = findViewById(R.id.confirm);
-        name = findViewById(R.id.Name);
+        //name = findViewById(R.id.Name);
 
         // autenticação no firebase
         mAuth = FirebaseAuth.getInstance();
@@ -82,7 +82,7 @@ public class CreateAccount extends AppCompatActivity {
     public void confirm(View view) {
         String saveemail = email.getText().toString();
         String savepassword = password.getText().toString();
-        String savename = name.getText().toString();
+        //String savename = name.getText().toString();
 
         // verificar se o que foi inserido no editText está correto
         if(TextUtils.isEmpty(saveemail)){
@@ -118,7 +118,7 @@ public class CreateAccount extends AppCompatActivity {
                             DocumentReference documentReference = mStore.collection("Users").document(userID);
                             Map<String, Object> userData = new HashMap<>();
                             // key(o que aparece no firebase antes dos :), value(depois dos :)
-                            userData.put("Name", name.getText().toString());
+                            //userData.put("Name", name.getText().toString());
                             userData.put("Email", email.getText().toString());
                             documentReference.set(userData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -127,8 +127,9 @@ public class CreateAccount extends AppCompatActivity {
                                 }
                             });
                             // Ir para o login
-                            Intent intent = new Intent(CreateAccount.this, Login.class);
+                            Intent intent = new Intent(CreateAccount.this, ConfigUser.class);
                             startActivity(intent);
+                            CreateAccount.this.finish();
                             //updateUI(user);
                         } else {
                             // Se não conseguir registar o utilizador

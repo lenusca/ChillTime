@@ -271,7 +271,8 @@
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#FFFFFF"
-                android:textColorLink="#FFFFFF" />
+                android:textColorLink="#FFFFFF"
+                android:onClick="Settings"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -5,5 +5,9 @@
     <string name="facebook_app_id">234499314481967</string>
     <string name="fb_login_protocol_scheme">fb234499314481967</string>
     <string name="genre">Genre</string>
+    <string name="movie_genre">Movie</string>
+    <string name="series_genre">Series</string>
+    <string name="next">NEXT</string>
+    <string name="done">DONE</string>
 
 </resources>
