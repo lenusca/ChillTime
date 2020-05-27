@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <dist:module dist:instant="true" />
 
     <application
@@ -18,8 +22,10 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SeriesCreateAccountActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Settings"></activity>
+        <activity
+            android:name=".SeriesCreateAccountActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MoviesCreateAccountActivity"
             android:theme="@style/AppTheme.NoActionBar" />
