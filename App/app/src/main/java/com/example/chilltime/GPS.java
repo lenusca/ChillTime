@@ -65,9 +65,7 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         //MAP
         setContentView(R.layout.activity_g_p_s);
-        requestPermissions();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        fetchLastLocation();
         // quando estiver pronto para carregar
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -95,7 +93,6 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
                 String printimage = "";
                 printname =documentSnapshot.getString("Name");
                 printimage = documentSnapshot.getString("Image");
-                System.out.println(printname);
                 name.setText(printname);
                 Picasso.get().load(printimage).into(image);
             }
@@ -156,9 +153,7 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
 
     }
 
-    private void fetchLastLocation() {
 
-    }
 
     //sidebar
     @Override
@@ -166,35 +161,35 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
         return choice.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case REQUEST_CODE:
-                if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    fetchLastLocation();
-                }
-                break;
-        }
-    }
-
-    public void requestPermissions(){
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            return;
-        }
+        // Dialog a pedir premissão para usar a localização do tele
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+
+        // Add a marker in Sydney, Australia, and move the camera.
+        LatLng sydney = new LatLng(-34, 151);
+        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String[] permissions,
+            int[] grantResults
+    ){
+        permissions();
+    }
+
+    public void permissions(){
+
 
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 if(location != null){
-                    System.out.println(location.getLatitude());
-                    System.out.println(location.getLongitude());
                     currentLocation = location;
                     LatLng userLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                     map.addMarker(new MarkerOptions().position(userLocation).title("User"));
@@ -204,12 +199,6 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
                 }
             }
         });
-
-
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-
     }
 
 
