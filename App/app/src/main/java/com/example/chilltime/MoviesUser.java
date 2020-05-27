@@ -66,8 +66,6 @@ public class MoviesUser extends Fragment implements IconSwitch.CheckedChangeList
         iconSwitch = view.findViewById(R.id.icon_switch);
         iconSwitch.setCheckedChangeListener(this);
         switchChange();
-
-
         return view;
     }
 
@@ -85,7 +83,6 @@ public class MoviesUser extends Fragment implements IconSwitch.CheckedChangeList
         // ir buscar o identificador do utilizador
         userID = mAuth.getCurrentUser().getUid();
         if(choice.equals("LEFT")){
-            System.out.println("AQ()");
             // ir buscar o documento relacionado com o utilizador, usando o uid
             final DocumentReference documentReference = mStore.collection("Users").document(userID);
             documentReference.addSnapshotListener((Activity) context, new EventListener<DocumentSnapshot>(){

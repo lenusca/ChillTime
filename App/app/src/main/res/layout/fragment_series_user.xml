@@ -3,14 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".SeriesUser">
+
+    <com.polyak.iconswitch.IconSwitch
+        android:id="@+id/icon_switch"
+        app:isw_default_selection="left"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        app:isw_icon_left="@drawable/addwatch"
+        app:isw_icon_right="@drawable/addfavorite"
+        app:isw_icon_size="20dp"
+        app:isw_inactive_tint_icon_left="#EE7168"
+        app:isw_inactive_tint_icon_right="#EE7168"
+        app:isw_thumb_color_left="#EE7168"
+        app:isw_thumb_color_right="#EE7168" />
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dataListSeries"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>/>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

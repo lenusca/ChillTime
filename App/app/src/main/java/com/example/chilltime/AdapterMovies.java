@@ -97,17 +97,30 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         // verifica se o filme ja esta na bd do user e muda a imagem por ja adicionado e visto
+        System.out.println(favoritesUser);
+        System.out.println(ids);
+        System.out.println(position);
+        if(favoritesUser != null){
+            if(favoritesUser.contains(ids.get(position))){
+                holder.addFavorite.setImageResource(R.drawable.removefavorite);
+            }
+        }
 
-        if(favoritesUser.contains(ids.get(position))){
-            holder.addFavorite.setImageResource(R.drawable.removefavorite);
+        if(watchesUser != null){
+            if(watchesUser.contains(ids.get(position))){
+                holder.addWatch.setImageResource(R.drawable.removewatch);
+            }
         }
-        if(watchesUser.contains(ids.get(position))){
-            holder.addWatch.setImageResource(R.drawable.removewatch);
+
+        else{
+            holder.addFavorite.setImageResource(R.drawable.addfavorite);
         }
+
+
+
 
         // para ir buscar a imagem a partir do url
         Picasso.get().load("https://image.tmdb.org/t/p/original/"+images.get(position)).into(holder.movieImage);
-        System.out.println(context.getResources().getDrawable(R.drawable.addfavorite).getConstantState());
         // guardar no firebase quando carrega na imagem e mudar o icon
         // Favoritos
         holder.addFavorite.setOnClickListener(new View.OnClickListener() {
