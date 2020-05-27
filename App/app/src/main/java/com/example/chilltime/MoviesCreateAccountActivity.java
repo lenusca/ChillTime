@@ -70,11 +70,10 @@ public class MoviesCreateAccountActivity extends AppCompatActivity implements Ad
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
             //ir buscar se não tiver null
-            if(documentSnapshot.get("GenreMovies")!=null){
-                idsGenreMovie = (List<String>) documentSnapshot.get("GenreMovies");
-            }else{
-                idsGenreMovie = null;
-            }
+                if(documentSnapshot.get("GenreMovies")!=null){
+                    idsGenreMovie = (List<String>) documentSnapshot.get("GenreMovies");
+                    getMovies(idsGenreMovie);
+                }
             }
         });
         if(idsGenreMovie!=null){

@@ -69,8 +69,7 @@ public class SeriesCreateAccountActivity extends AppCompatActivity {
                 //ir buscar se não tiver null
                 if(documentSnapshot.get("GenreSeries")!=null){
                     idsGenreSerie = (List<String>) documentSnapshot.get("GenreSeries");
-                }else{
-                    idsGenreSerie = null;
+                    getMovies(idsGenreSerie);
                 }
             }
         });
@@ -109,7 +108,7 @@ public class SeriesCreateAccountActivity extends AppCompatActivity {
                                 //image
                                 images.add(movieData.getString("poster_path"));
                                 //nome
-                                names.add(movieData.getString("title"));
+                                names.add(movieData.getString("name"));
                             }
                         }
                     }catch (JSONException e){

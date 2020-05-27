@@ -249,6 +249,7 @@ public class ConfigUser extends AppCompatActivity  {
         final String saveName = name.getText().toString();
         final String saveDate = date.getText().toString();
         final Uri url;
+        InputStream inputStream;
 
         if(TextUtils.isEmpty(saveName)){
             name.setError("Name is required!");
@@ -283,9 +284,11 @@ public class ConfigUser extends AppCompatActivity  {
             //System.out.println("################################################################# "+imgStorage);
             if(sexo.equals("F")){
                 imgStorage = "https://firebasestorage.googleapis.com/v0/b/chilltime-10d1d.appspot.com/o/woman.png?alt=media&token=e7918ae3-1435-48f7-8e58-134b32fbb11c";
+
             }
             else{
                 imgStorage = "https://firebasestorage.googleapis.com/v0/b/chilltime-10d1d.appspot.com/o/male.png?alt=media&token=272afc4a-256e-4d24-ab54-55f4f13c7203";
+
             }
             userData = new HashMap<>();
             userData.put("Name", saveName);
