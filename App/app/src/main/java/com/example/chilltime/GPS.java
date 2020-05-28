@@ -16,11 +16,18 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -39,7 +46,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.gson.JsonArray;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class GPS extends AppCompatActivity implements OnMapReadyCallback {
@@ -59,6 +71,8 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     final int REQUEST_CODE = 101;
+    // Ir buscar todos os cinemas
+    RequestQueue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,9 +182,8 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
         // Dialog a pedir premissão para usar a localização do tele
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
 
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        // Todos os cinemas
+        cinemaLocalization();
 
     }
 
@@ -180,12 +193,10 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
             String[] permissions,
             int[] grantResults
     ){
-        permissions();
+        userLocalization();
     }
 
-    public void permissions(){
-
-
+    public void userLocalization(){
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -199,6 +210,35 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
                 }
             }
         });
+    }
+
+    public void cinemaLocalization(){
+        // API google places
+        mQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "https://maps.googleapis.com/maps/api/place/textsearch/json?query=Cinema&location=40.626709%2C-8.644752&radius=100&key=AIzaSyBnmYS6fjLrp7mtdh-L79054GnpUIml2q4&fbclid=IwAR2Va3vheUJS9djO5V0s1c_FuU6l-XJZ7gQdCeFk1nZZdgWFc-m0iAdhBvw", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray results = response.getJSONArray("results");
+                            for(int i=0; i< results.length(); i++){
+                                // Todos os cinemas
+                                double lat = results.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                                double lng = results.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+                                map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(results.getJSONObject(i).getString("name")));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("ERROR");
+                error.printStackTrace();
+            }
+        });
+        mQueue.add(request);
     }
 
 
