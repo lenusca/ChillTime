@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +57,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class GPS extends AppCompatActivity implements OnMapReadyCallback {
     //SIDEBAR
@@ -73,12 +80,21 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
     final int REQUEST_CODE = 101;
     // Ir buscar todos os cinemas
     RequestQueue mQueue;
+    // Adapter
+    AdapterCinemas adapter;
+    RecyclerView dataList;
+    List<String> names;
+    List<String> images;
+    List<String> coordinates;
+    List<String> closed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //MAP
         setContentView(R.layout.activity_g_p_s);
+        //Views
+        dataList = findViewById(R.id.cinemas);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         // quando estiver pronto para carregar
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -124,7 +140,6 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
                 int id = item.getItemId();
                 switch(id)
                 {
@@ -151,7 +166,9 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
                         GPS.this.finish();
                         return true;
                     case R.id.settings:
-                        Toast.makeText(GPS.this, "Settings",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(GPS.this, Settings.class);
+                        startActivity(intent);
+                        GPS.this.finish();
                         return true;
                     case R.id.logout:
                         FirebaseAuth.getInstance().signOut();
@@ -213,6 +230,12 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     public void cinemaLocalization(){
+        names = new ArrayList<>();
+        images = new ArrayList<>();
+        coordinates = new ArrayList<>();
+        closed = new ArrayList<>();
+        // para ir buscar as imagens
+        //https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
         // API google places
         mQueue = Volley.newRequestQueue(this);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "https://maps.googleapis.com/maps/api/place/textsearch/json?query=Cinema&location=40.626709%2C-8.644752&radius=100&key=AIzaSyBnmYS6fjLrp7mtdh-L79054GnpUIml2q4&fbclid=IwAR2Va3vheUJS9djO5V0s1c_FuU6l-XJZ7gQdCeFk1nZZdgWFc-m0iAdhBvw", null,
@@ -225,11 +248,23 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
                                 // Todos os cinemas
                                 double lat = results.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
                                 double lng = results.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+                                names.add(results.getJSONObject(i).getString("name"));
+                                closed.add(""); // não era preciso este
+                                coordinates.add("["+String.valueOf(lat)+", "+String.valueOf(lng)+"]");
+                                // por agora está o icon, depois ver como ir buscar a imagem
+                                images.add(results.getJSONObject(i).getString("icon"));
                                 map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(results.getJSONObject(i).getString("name")));
                             }
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        adapter = new AdapterCinemas(GPS.this, names, coordinates, closed, images);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(GPS.this, LinearLayoutManager.HORIZONTAL, false);
+                        System.out.println(dataList);
+                        dataList.setLayoutManager(linearLayoutManager);
+                        dataList.setAdapter(adapter);
                     }
                 }, new Response.ErrorListener() {
             @Override

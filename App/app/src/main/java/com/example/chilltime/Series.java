@@ -171,7 +171,9 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                         Series.this.finish();
                         return true;
                     case R.id.settings:
-                        Toast.makeText(Series.this, "Settings",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Series.this, Settings.class);
+                        startActivity(intent);
+                        Series.this.finish();
                         return true;
                     case R.id.logout:
                         FirebaseAuth.getInstance().signOut();

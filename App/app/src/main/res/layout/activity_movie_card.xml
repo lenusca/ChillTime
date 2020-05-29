@@ -32,7 +32,7 @@
             android:layout_toRightOf="@id/movieImage"
             android:text="Movie Title"
             android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/movieDuration"

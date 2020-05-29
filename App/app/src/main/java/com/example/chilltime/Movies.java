@@ -174,7 +174,9 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                         Movies.this.finish();
                         return true;
                     case R.id.settings:
-                        Toast.makeText(Movies.this, "Settings",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Movies.this, Settings.class);
+                        startActivity(intent);
+                        Movies.this.finish();
                         return true;
                     case R.id.logout:
                         FirebaseAuth.getInstance().signOut();
