@@ -254,4 +254,5 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
 
         }
     }
+
 }

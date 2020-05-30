@@ -1,5 +1,6 @@
 package com.example.chilltime;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -44,17 +45,16 @@ public class MovieList extends AppCompatActivity {
         descripton = new ArrayList<>();
         mStore = FirebaseFirestore.getInstance();
         // receber a mensagem da outra atividade
-
+        Intent intent = getIntent();
+        message = intent.getStringExtra(GPS.EXTRA_MESSAGE);
         // ir buscar o documento relacionado com o utilizador, usando o uid
         final DocumentReference documentReference = mStore.collection("Cinema").document(message);
-        System.out.println(documentReference);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>(){
 
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 // dizer o que quer ir buscar
                 names = (List<String>) documentSnapshot.get("filmName");
-                System.out.println(names);
                 images = (List<String>) documentSnapshot.get("filmImage");
                 List<Long> runtimes = (List<Long>)documentSnapshot.get("filmRuntime");
                 for(Long value : runtimes){

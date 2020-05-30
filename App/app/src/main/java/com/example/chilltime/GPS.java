@@ -15,6 +15,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -39,7 +41,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -59,9 +64,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
-public class GPS extends AppCompatActivity implements OnMapReadyCallback {
+public class GPS extends AppCompatActivity implements OnMapReadyCallback, AdapterLocation.RecyclerViewClickListener {
     //SIDEBAR
     DrawerLayout sidebar;
     ActionBarDrawerToggle choice;
@@ -78,21 +84,26 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     final int REQUEST_CODE = 101;
+    List<MarkerOptions> markers;
     // Ir buscar todos os cinemas
     RequestQueue mQueue;
     // Adapter
-    AdapterCinemas adapter;
+    AdapterLocation adapter;
     RecyclerView dataList;
     List<String> names;
     List<String> images;
     List<String> coordinates;
     List<String> closed;
+    List<String> photo_reference;
+    // Para mandar o id para outra activity(details)
+    public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //MAP
         setContentView(R.layout.activity_g_p_s);
+        markers = new ArrayList<>();
         //Views
         dataList = findViewById(R.id.cinemas);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -202,6 +213,17 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
         // Todos os cinemas
         cinemaLocalization();
 
+        // Carregar e vai para a atividade que tem os filmes todos daquele cinema
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent intent = new Intent(GPS.this, MovieList.class);
+                intent.putExtra(EXTRA_MESSAGE, String.valueOf(names.indexOf(marker.getTitle())+1));
+                GPS.this.startActivity(intent);
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -220,10 +242,14 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
                 if(location != null){
                     currentLocation = location;
                     LatLng userLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                    map.addMarker(new MarkerOptions().position(userLocation).title("User"));
+                    int height = 150;
+                    int width = 150;
+                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.marker);
+                    Bitmap b=bitmapdraw.getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                    map.addMarker(new MarkerOptions().position(userLocation).title("User").icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
                     map.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11));
-
                 }
             }
         });
@@ -235,7 +261,6 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
         coordinates = new ArrayList<>();
         closed = new ArrayList<>();
         // para ir buscar as imagens
-        //https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
         // API google places
         mQueue = Volley.newRequestQueue(this);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "https://maps.googleapis.com/maps/api/place/textsearch/json?query=Cinema&location=40.626709%2C-8.644752&radius=100&key=AIzaSyBnmYS6fjLrp7mtdh-L79054GnpUIml2q4&fbclid=IwAR2Va3vheUJS9djO5V0s1c_FuU6l-XJZ7gQdCeFk1nZZdgWFc-m0iAdhBvw", null,
@@ -251,18 +276,22 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
                                 names.add(results.getJSONObject(i).getString("name"));
                                 closed.add(""); // não era preciso este
                                 coordinates.add("["+String.valueOf(lat)+", "+String.valueOf(lng)+"]");
-                                // por agora está o icon, depois ver como ir buscar a imagem
-                                images.add(results.getJSONObject(i).getString("icon"));
+                                // se tiver imagem vai buscar imagem
+                                if(results.getJSONObject(i).has("photos")){
+                                    images.add(results.getJSONObject(i).getJSONArray("photos").getJSONObject(0).getString("photo_reference"));
+                                }
+                                // se não vai buscar icon
+                                else{
+                                    images.add(results.getJSONObject(i).getString("icon"));
+                                }
                                 map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(results.getJSONObject(i).getString("name")));
+                                markers.add(new MarkerOptions().position(new LatLng(lat, lng)).title(results.getJSONObject(i).getString("name")));
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        adapter = new AdapterCinemas(GPS.this, names, coordinates, closed, images);
+                        adapter = new AdapterLocation(GPS.this, names, coordinates, closed, images, GPS.this);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(GPS.this, LinearLayoutManager.HORIZONTAL, false);
-                        System.out.println(dataList);
                         dataList.setLayoutManager(linearLayoutManager);
                         dataList.setAdapter(adapter);
                     }
@@ -277,4 +306,14 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback {
     }
 
 
+    @Override
+    public void onClick(View view, int position) {
+         String locationName = names.get(position);
+         for(MarkerOptions m: markers){
+            if(m.getTitle().equals(locationName)){
+
+                map.moveCamera(CameraUpdateFactory.newLatLng(m.getPosition()));
+            }
+         }
+    }
 }
