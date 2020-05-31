@@ -23,12 +23,12 @@
 
         <TextView
             android:id="@+id/movieTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="false"
-            android:layout_marginLeft="24dp"
-            android:layout_marginBottom="97dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginBottom="83dp"
             android:layout_toRightOf="@id/movieImage"
             android:text="Movie Title"
             android:textColor="@android:color/black"
@@ -36,13 +36,14 @@
 
         <TextView
             android:id="@+id/movieDuration"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/movieTitle"
             android:layout_alignParentRight="false"
-            android:layout_marginLeft="37dp"
+            android:layout_marginLeft="2dp"
             android:layout_toRightOf="@id/movieTitle"
-            android:text="Movie Time" />
+            android:text="Movie Time"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/movieDesciption"

@@ -165,8 +165,6 @@ public class DashboardUser extends Fragment {
         seriesChart.setUsePercentValues(true);
         seriesChart.setHoleRadius(0f);
         seriesChart.setTransparentCircleRadius(0f);
-        Description desc = new Description();
-        desc.setText("");
 
 
 
@@ -184,7 +182,9 @@ public class DashboardUser extends Fragment {
         PieData pieData = new PieData(pieDataSet);
         movieChart.setData(pieData);
         pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-        //movieChart.setDescription(desc);
+        Description descMovies = new Description();
+        descMovies.setText("Movie Genres");
+        movieChart.setDescription(descMovies);
 
 
 
@@ -198,7 +198,9 @@ public class DashboardUser extends Fragment {
         PieData pieDataSeries = new PieData(pieDataSetSeries);
         seriesChart.setData(pieDataSeries);
         pieDataSetSeries.setColors(ColorTemplate.JOYFUL_COLORS);
-        //seriesChart.setDescription(desc);
+        Description descSeries = new Description();
+        descSeries.setText("Series Genres");
+        seriesChart.setDescription(descSeries);
 
         return view;
     }
