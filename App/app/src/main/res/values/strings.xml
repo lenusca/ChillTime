@@ -10,6 +10,12 @@
     <string name="next">NEXT</string>
     <string name="done">DONE</string>
     <string name="google_maps_API_key">AIzaSyBnmYS6fjLrp7mtdh-L79054GnpUIml2q4</string>
+    <string name="edit_count">Edit Account</string>
+    <string name="remove_account">Remove Account</string>
+    <string name="logout">LogOut</string>
+    <string name="save">SAVE</string>
+    <string name="pwd">password</string>
+    <string name="email">mail</string>
 
 
 </resources>

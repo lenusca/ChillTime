@@ -1,11 +1,16 @@
 package com.example.chilltime;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +19,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -40,10 +46,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 
 import java.util.Arrays;
@@ -55,6 +63,7 @@ public class Login extends AppCompatActivity {
     // dar feedback quando carrega num botão
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
     EditText email, password;
+    ImageView logo;
 
     // autenticação no firebase
     FirebaseAuth mAuth;
@@ -67,10 +76,13 @@ public class Login extends AppCompatActivity {
     // guardar a info no Firestore
     FirebaseFirestore mStore;
     String userID;
+    DocumentReference documentReference;
 
     // autenticação com o facebook
     CallbackManager callbackManager;
     ImageButton facebookButton;
+
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +92,19 @@ public class Login extends AppCompatActivity {
         email = findViewById(R.id.Email);
         password = findViewById(R.id.Password);
         facebookButton = findViewById(R.id.bt_fb_login);
+        logo = findViewById(R.id.logo);
 
+        sharedPreferences = getSharedPreferences(getString(R.string.pwd), Context.MODE_PRIVATE);
+
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode){
+            case Configuration.UI_MODE_NIGHT_NO:
+                logo.setImageResource(R.drawable.logo);
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                logo.setImageResource(R.drawable.logo_dark);
+                break;
+        }
 
         // autenticação no firebase
         mAuth = FirebaseAuth.getInstance();
@@ -168,6 +192,9 @@ public class Login extends AppCompatActivity {
             password.setError("Password need to have 6 characters!");
             return;
         }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(getString(R.string.pwd), password.getText().toString());
+        editor.apply();
 
         // autenticação com o email e pass
         mAuth.signInWithEmailAndPassword(saveemail, savepassword)

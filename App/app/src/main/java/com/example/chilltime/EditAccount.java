@@ -1,6 +1,10 @@
 package com.example.chilltime;
 
-import android.annotation.SuppressLint;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -18,13 +22,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,10 +32,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -46,7 +50,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConfigUser extends AppCompatActivity  {
+public class EditAccount extends AppCompatActivity {
     public static final int IMAGE_GALLERY_REQUEST = 20;
     static final int REQUEST_IMAGE_CAPTURE = 1034;
 
@@ -71,22 +75,18 @@ public class ConfigUser extends AppCompatActivity  {
 
     // Dados para serem guardados
     EditText name;
-    static TextView date, txtErroSex;
-    ImageButton female, male;
+    static TextView date;
     ImageView image;
+    Switch switchSexo;
 
-
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_config_user);
+        setContentView(R.layout.activity_edit_account);
         name = findViewById(R.id.Name);
         date = findViewById(R.id.txt_date);
-        female = findViewById(R.id.btn_female);
-        male = findViewById(R.id.btn_male);
         image = findViewById(R.id.image);
-        txtErroSex = findViewById(R.id.txt_sexo_erro);
+        switchSexo = findViewById(R.id.switchgender);
 
         // autenticação no firebase
         mAuth = FirebaseAuth.getInstance();
@@ -97,8 +97,34 @@ public class ConfigUser extends AppCompatActivity  {
         userID = mAuth.getCurrentUser().getUid();
         documentReference = mStore.collection("Users").document(userID);
 
-    }
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.get("Sex")!=null){
+                    if(documentSnapshot.get("Sex").equals("F")) {
+                        switchSexo.setChecked(true);
+                    }else {
+                        switchSexo.setChecked(false);
+                    }
+                }else{
+                    switchSexo.setChecked(false);
+                }
+                if(documentSnapshot.get("Name")!=null){
+                    name.setText(documentSnapshot.get("Name").toString());
+                }else{
+                    name.setText("User");
+                }
+                if(documentSnapshot.get("Date")!=null){
+                    date.setText(documentSnapshot.get("Date").toString());
+                }
+                if(documentSnapshot.get("Image")!=null){
+                    Picasso.get().load(documentSnapshot.get("Image").toString()).into(image);
+                    imgStorage = documentSnapshot.get("Image").toString();
+                }
+            }
+        });
 
+    }
 
     public void addImage(View view) {
         //invoke image gallery
@@ -184,13 +210,13 @@ public class ConfigUser extends AppCompatActivity  {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(ConfigUser.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditAccount.this, "Uploaded", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ConfigUser.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditAccount.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -208,24 +234,12 @@ public class ConfigUser extends AppCompatActivity  {
 
     }
 
-    public void setMale(View view) {
-        male.setAlpha((float)1.0);
-        female.setAlpha((float) 0.7);
-        sexo = "M";
-    }
-
-    public void setFemale(View view) {
-        female.setAlpha((float) 1.0);
-        male.setAlpha((float)0.7);
-        sexo = "F";
-    }
-
     public void addDate(View view) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    /**********************************************************/
+    /********************************CALENDARIO*******************/
     //Class interna do calendario
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
         @NonNull
@@ -245,7 +259,16 @@ public class ConfigUser extends AppCompatActivity  {
         }
     }
     /****************************************/
-    public void onNext(View view) throws IOException {
+
+    public void userSex(View view) {
+        if(switchSexo.isChecked()){
+            sexo = "F";
+        }else{
+            sexo = "M";
+        }
+    }
+
+    public void onSave(View view) {
         final String saveName = name.getText().toString();
         final String saveDate = date.getText().toString();
         final Uri url;
@@ -258,9 +281,6 @@ public class ConfigUser extends AppCompatActivity  {
         if(TextUtils.isEmpty(saveDate)){
             date.setError("Date is required!");
             return;
-        }
-        if(sexo.isEmpty()){
-            txtErroSex.setError("Select your genre!");
         }
 
         if(imageUri != null) {
@@ -277,20 +297,11 @@ public class ConfigUser extends AppCompatActivity  {
                     }
                 });
                 // Ir para o genre
-                Intent intent = new Intent(ConfigUser.this, ChooseGenreMovie.class);
+                Intent intent = new Intent(EditAccount.this, Settings.class);
                 startActivity(intent);
-                ConfigUser.this.finish();
+                EditAccount.this.finish();
             }
         }else{
-            //System.out.println("################################################################# "+imgStorage);
-            if(sexo.equals("F")){
-                imgStorage = "https://firebasestorage.googleapis.com/v0/b/chilltime-10d1d.appspot.com/o/woman.png?alt=media&token=e7918ae3-1435-48f7-8e58-134b32fbb11c";
-
-            }
-            else{
-                imgStorage = "https://firebasestorage.googleapis.com/v0/b/chilltime-10d1d.appspot.com/o/male.png?alt=media&token=272afc4a-256e-4d24-ab54-55f4f13c7203";
-
-            }
             userData = new HashMap<>();
             userData.put("Name", saveName);
             userData.put("Sex", sexo);
@@ -303,12 +314,11 @@ public class ConfigUser extends AppCompatActivity  {
                 }
             });
             // Ir para o genre
-            Intent intent = new Intent(ConfigUser.this, ChooseGenreMovie.class);
+            Intent intent = new Intent(EditAccount.this, Settings.class);
             startActivity(intent);
-            ConfigUser.this.finish();
+            EditAccount.this.finish();
         }
 
     }
 
 }
-

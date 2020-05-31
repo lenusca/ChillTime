@@ -5,14 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#FFFDFD"
     tools:context=".DetailsSerie">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:background="#FFFDFD">
+        android:layout_marginBottom="30dp">
 
         <ImageView
             android:id="@+id/secondImage"

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFDFD"
     tools:context=".CreateAccount">
 
     <TextView
@@ -55,9 +54,6 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:paddingLeft="10dp"
-        android:textColorHighlight="@android:color/darker_gray"
-        android:textColorLink="@android:color/darker_gray"
-        android:textCursorDrawable="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,9 +76,6 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:paddingLeft="10dp"
-        android:textColorHighlight="@android:color/darker_gray"
-        android:textColorLink="@android:color/darker_gray"
-        android:textCursorDrawable="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,9 +98,6 @@
         android:hint="Confirm Password"
         android:inputType="textPassword"
         android:paddingLeft="10dp"
-        android:textColorHighlight="@android:color/darker_gray"
-        android:textColorLink="@android:color/darker_gray"
-        android:textCursorDrawable="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
