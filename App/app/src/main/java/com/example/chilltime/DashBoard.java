@@ -45,7 +45,7 @@ public class DashBoard extends AppCompatActivity {
     String userID;
     DocumentReference documentReference;
     List<String> dateList;
-
+    List<String> serieList;
     // Para mandar o id para outra activity(details)
     public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
@@ -65,7 +65,7 @@ public class DashBoard extends AppCompatActivity {
         logo = findViewById(R.id.imageView2);
 
         dateList = new ArrayList<>();
-
+        serieList = new ArrayList<>();
 
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         switch (currentNightMode){
@@ -88,10 +88,11 @@ public class DashBoard extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.get("WatchesSeriesDate") != null){ ;
                     dateList = (List<String>) documentSnapshot.get("WatchesSeriesDate");
+                    serieList = (List<String>) documentSnapshot.get("WatchesSeries");
                     if(!isMyServiceRunning(Notifications.class)){
 
                         Intent intent = new Intent(DashBoard.this, Notifications.class);
-                        intent.putExtra(EXTRA_MESSAGE, dateList.toString());
+                        intent.putExtra(EXTRA_MESSAGE, dateList.toString() + ":"+ serieList.toString());
                         startService(intent);
                     }
                 }
@@ -106,10 +107,6 @@ public class DashBoard extends AppCompatActivity {
         });
 
         notification();
-
-
-
-
     }
 
 
@@ -120,8 +117,6 @@ public class DashBoard extends AppCompatActivity {
             notificationManager.createNotificationChannel(notificationChannel);
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "n").setContentText("New Series and Movies").setSmallIcon(R.drawable.logo).setAutoCancel(true);
-        builder.setPriority(Notification.PRIORITY_HIGH);
-        builder.setPriority(Notification.PRIORITY_MAX);
         builder.setDefaults(NotificationCompat.DEFAULT_SOUND);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(999, builder.build());
