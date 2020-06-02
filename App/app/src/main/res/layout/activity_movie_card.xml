@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="170dp"
     android:layout_margin="10dp"
     android:padding="10dp"
     app:cardCornerRadius="5dp"
@@ -18,17 +18,16 @@
         <ImageView
             android:id="@+id/movieImage"
             android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:padding="2dp" />
+            android:layout_height="180dp"
+            android:padding="2dp"
+            android:scaleType="fitXY" />
 
         <TextView
             android:id="@+id/movieTitle"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="false"
             android:layout_marginLeft="9dp"
-            android:layout_marginBottom="83dp"
             android:layout_toRightOf="@id/movieImage"
             android:text="Movie Title"
             android:textColor="@android:color/black"
@@ -36,23 +35,28 @@
 
         <TextView
             android:id="@+id/movieDuration"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/movieTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_above="@+id/movieDesciption"
+            android:layout_below="@+id/movieTitle"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="false"
-            android:layout_marginLeft="2dp"
-            android:layout_toRightOf="@id/movieTitle"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="3dp"
+            android:layout_toEndOf="@+id/movieImage"
             android:text="Movie Time"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/movieDesciption"
             android:layout_width="241dp"
-            android:layout_height="68dp"
+            android:layout_height="110dp"
             android:layout_alignLeft="@id/movieTitle"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="0dp"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="6dp"
             android:text="Movie Description" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

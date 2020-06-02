@@ -48,7 +48,7 @@ public class AdapterCinemas extends RecyclerView.Adapter<AdapterCinemas.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.runtime.setText(runtimes.get(position));
+        holder.runtime.setText(runtimes.get(position)+" min");
         holder.description.setText(description.get(position));
         holder.name.setText(names.get(position));
         // falta a imagem
