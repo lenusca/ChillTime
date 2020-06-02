@@ -16,6 +16,7 @@
     <string name="save">SAVE</string>
     <string name="pwd">password</string>
     <string name="email">mail</string>
+    <string name="scan">Scan</string>
 
 
 </resources>

@@ -98,9 +98,9 @@ public class DashBoard extends AppCompatActivity {
     }
 
     public void QRCode(View view) {
-        Intent intent = new Intent(this, MovieList.class);
+        Intent intent = new Intent(this, QRCode.class);
         startActivity(intent);
-        DashBoard.this.finish();
+        //DashBoard.this.finish();
     }
 
     public void Settings(View view) {

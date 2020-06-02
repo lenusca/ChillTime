@@ -57,6 +57,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    //qrcode
+    implementation 'com.karumi:dexter:5.0.0'
+    implementation 'com.otaliastudios:cameraview:2.6.2'
+    implementation 'com.google.android.gms:play-services-vision:20.0.0'
+    implementation 'com.google.firebase:firebase-ml-vision:24.0.3'
+    implementation 'com.google.firebase:firebase-ml-vision-barcode-model:16.1.1'
 }
 
 apply plugin: 'com.android.application'

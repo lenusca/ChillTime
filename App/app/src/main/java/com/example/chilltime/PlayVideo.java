@@ -25,6 +25,7 @@ public class PlayVideo extends YouTubeBaseActivity {
         final Intent intent = getIntent();
         final String videoId = intent.getStringExtra(DetailsMovie.EXTRA_MESSAGE);
 
+
         //
 
         onInitializedListener = new YouTubePlayer.OnInitializedListener() {
