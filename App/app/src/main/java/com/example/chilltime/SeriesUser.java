@@ -41,6 +41,8 @@ public class SeriesUser extends Fragment implements IconSwitch.CheckedChangeList
     List<Long> idsWatches;
     List<String> imageWatches;
     List<String> dateWatches;
+    List<String> idGenderSeriesWatch;
+    List<String> idGenresSeries;
     long timeWatches;
 
     // Switch
@@ -96,19 +98,21 @@ public class SeriesUser extends Fragment implements IconSwitch.CheckedChangeList
                         idsFavorites = (List<Long>) documentSnapshot.get("FavoritesSeries");
                         imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesSeries");
                     }
-                    if(documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesSeriesTime") == null || documentSnapshot.get("WatchesSeriesDate") == null){
+                    if(documentSnapshot.get("IdGenderSeriesWatch")==null || documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesSeriesTime") == null || documentSnapshot.get("WatchesSeriesDate") == null){
                         idsWatches = new ArrayList<>();
                         imageWatches = new ArrayList<>();
                         dateWatches = new ArrayList<>();
+                        idGenderSeriesWatch = new ArrayList<>();
                         timeWatches = 0;
                     }
                     else {
                         idsWatches = (List<Long>) documentSnapshot.get("WatchesSeries");
                         imageWatches = (List<String>) documentSnapshot.get("WatchesImagesSeries");
                         dateWatches = (List<String>) documentSnapshot.get("WatchesSeriesDate");
+                        idGenderSeriesWatch = (List<String>) documentSnapshot.get("IdGenderSeriesWatch");
                         timeWatches = (long) documentSnapshot.get("WatchesSeriesTime");
                     }
-                    adapter = new AdapterSeries(getContext(), imageWatches, imageWatches, idsWatches, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, dateWatches);
+                    adapter = new AdapterSeries(getContext(), imageWatches, imageWatches, idsWatches, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, dateWatches, idGenderSeriesWatch, idGenresSeries);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
                     dataList.setLayoutManager(gridLayoutManager);
                     // colocar os dados no view
@@ -132,17 +136,19 @@ public class SeriesUser extends Fragment implements IconSwitch.CheckedChangeList
                         idsFavorites = (List<Long>) documentSnapshot.get("FavoritesSeries");
                         imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesSeries");
                     }
-                    if(documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesSeriesTime") == null){
+                    if(documentSnapshot.get("IdGenderSeriesWatch")==null || documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesSeriesTime") == null){
                         idsWatches = new ArrayList<>();
                         imageWatches = new ArrayList<>();
+                        idGenderSeriesWatch = new ArrayList<>();
                         timeWatches = 0;
                     }
                     else {
                         idsWatches = (List<Long>) documentSnapshot.get("WatchesSeries");
                         imageWatches = (List<String>) documentSnapshot.get("WatchesImagesSeries");
+                        idGenderSeriesWatch = (List<String>) documentSnapshot.get("IdGenderSeriesWatch");
                         timeWatches = (long) documentSnapshot.get("WatchesSeriesTime");
                     }
-                    adapter = new AdapterSeries(getContext(), imageFavorites, imageFavorites, idsFavorites, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches,dateWatches);
+                    adapter = new AdapterSeries(getContext(), imageFavorites, imageFavorites, idsFavorites, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches,dateWatches, idGenderSeriesWatch, idGenresSeries);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
                     dataList.setLayoutManager(gridLayoutManager);
                     // colocar os dados no view

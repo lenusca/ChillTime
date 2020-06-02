@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,6 +56,8 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
     List<Long> watchesUser;
     List<String> imagesWatchesUser;
     List<String> dateWatches;
+    List<String> idGenderSeriesWatch;
+    List<String> idGenresSeries;
     DocumentReference documentReference;
     long timeWatches;
     int time = 0;
@@ -65,7 +68,8 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
     public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
 
-    public AdapterSeries(Context context, List<String> names, List<String> images, List<Long> ids, List<Long> idsFavorites, List<String> imagesFavoritesUser, List<Long> idsWatches, List<String> imagesWatchesUser, long timeWatches, List<String> dateWatches){
+    public AdapterSeries(Context context, List<String> names, List<String> images, List<Long> ids, List<Long> idsFavorites, List<String> imagesFavoritesUser, List<Long> idsWatches, List<String> imagesWatchesUser, long timeWatches, List<String> dateWatches,
+                            List<String> idGenderSeriesWatch, List<String> idGenresSeries){
         this.names = names;
         this.context = context;
         this.images = images;
@@ -77,6 +81,8 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
         this.imagesWatchesUser = imagesWatchesUser;
         this.timeWatches = timeWatches;
         this.dateWatches = dateWatches;
+        this.idGenderSeriesWatch = idGenderSeriesWatch;
+        this.idGenresSeries = idGenresSeries;
 
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
@@ -173,9 +179,11 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
                                     if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.addwatch).getConstantState())) {
                                         watchesUser.add(ids.get(position));
                                         imagesWatchesUser.add(images.get(position));
+                                        idGenderSeriesWatch.add(idGenresSeries.get(position));
                                         dateWatches.add(date);
                                         userWatches.put("WatchesSeries", watchesUser);
                                         userWatches.put("WatchesImagesSeries", imagesWatchesUser);
+                                        userWatches.put("IdGenderSeriesWatch", idGenderSeriesWatch);
                                         userWatches.put("WatchesSeriesDate", dateWatches);
                                         timeWatches = timeWatches + time;
                                         userWatches.put("WatchesSeriesTime", timeWatches);
@@ -191,10 +199,12 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
                                     else if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.removewatch).getConstantState())){
                                         watchesUser.removeAll(Collections.singleton(ids.get(position)));
                                         imagesWatchesUser.removeAll(Collections.singleton(images.get(position)));
+                                        idGenderSeriesWatch.removeAll(Collections.singleton(idGenresSeries.get(position)));
                                         dateWatches.remove(date);
                                         userWatches.put("WatchesSeries", watchesUser);
                                         userWatches.put("WatchesImagesSeries", imagesWatchesUser);
                                         userWatches.put("WatchesSeriesDate", dateWatches);
+                                        userWatches.put("IdGenderSeriesWatch", idGenderSeriesWatch);
                                         timeWatches = timeWatches - time;
                                         userWatches.put("WatchesSeriesTime", timeWatches);
                                         documentReference.set(userWatches,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {

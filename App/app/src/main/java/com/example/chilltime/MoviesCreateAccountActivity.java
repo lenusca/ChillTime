@@ -44,6 +44,8 @@ public class MoviesCreateAccountActivity extends AppCompatActivity implements Ad
     List<String> imagesFavoritesUser = new LinkedList<>(); //imagens dos filmes favoritos do user
     List<Long> idsWatches = new LinkedList<>(); //ids dos movies vistos pelo user
     List<String> imagesWatchesUser= new LinkedList<>(); //imagens dos filmes vistos pelo user
+    List<String> idGenderMoviesWatch = new ArrayList<>();
+    List<String> idGenresMovies = new ArrayList<>();
     long timeWatches = 0;
     //XML
     RecyclerView dataList;
@@ -77,7 +79,7 @@ public class MoviesCreateAccountActivity extends AppCompatActivity implements Ad
             }
         });
         if(idsGenreMovie!=null){
-            System.out.println("IDSSSSSSSS GENRES MOVIES--------- "+idsGenreMovie);
+            //System.out.println("IDSSSSSSSS GENRES MOVIES--------- "+idsGenreMovie);
             getMovies(idsGenreMovie);
         }
 
@@ -93,27 +95,13 @@ public class MoviesCreateAccountActivity extends AppCompatActivity implements Ad
 
     }
 
-  /*  private void getIds(){
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                //ir buscar se não tiver null
-                if(documentSnapshot.get("GenreMovies")!=null){
-                    idsGenreMovie = (List<String>) documentSnapshot.get("GenreMovies");
-                }else{
-                    idsGenreMovie = null;
-                }
-            }
-        });
-    }*/
-
     private void getMovies(List<String> ids){
         StringBuilder allIds = new StringBuilder();
         if(ids != null){
             for(int i=0; i<ids.size(); i++){
                 allIds.append(ids.get(i)).append("%7C");
             }
-            System.out.println("################################### allIds: "+allIds);
+            //System.out.println("################################### allIds: "+allIds);
             mQueue = Volley.newRequestQueue(this);
             //ir buscar os filmes a partir do genero os populares
             String url = "https://api.themoviedb.org/3/discover/movie?api_key=6458cccff38c4ec22f31df407f03048e&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=true&page=1%7C2&with_genres="+allIds;
@@ -134,13 +122,15 @@ public class MoviesCreateAccountActivity extends AppCompatActivity implements Ad
                                 images.add(movieData.getString("poster_path"));
                                 //nome
                                 names.add(movieData.getString("title"));
+                                //genre
+                                idGenresMovies.add(movieData.getString("genre_ids"));
                             }
                         }
                     }catch (JSONException e){
                         e.printStackTrace();
                     }
                     // mandar para o adapter que vai mandar para o reciclerview
-                    mAdapter = new AdapterMovies(MoviesCreateAccountActivity.this, names,  images, idsMovie, idsFavorites, imagesFavoritesUser,  idsWatches, imagesWatchesUser, timeWatches);
+                    mAdapter = new AdapterMovies(MoviesCreateAccountActivity.this, names,  images, idsMovie, idsFavorites, imagesFavoritesUser,  idsWatches, imagesWatchesUser, timeWatches, idGenderMoviesWatch, idGenresMovies);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(MoviesCreateAccountActivity.this, 3, GridLayoutManager.VERTICAL, false);
                     dataList.setLayoutManager(gridLayoutManager);
                     // colocar os dados no view

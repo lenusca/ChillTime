@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.internal.CollectionMapper;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,6 +58,8 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
     List<String> imagesFavoritesUser;
     List<Long> watchesUser;
     List<String> imagesWatchesUser;
+    List<String> idGenderMoviesWatch;
+    List<String> idGenresMovies;
     DocumentReference documentReference;
     long timeWatches;
     int time = 0;
@@ -65,7 +68,8 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
     // Para mandar o id para outra activity(details)
     public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
-    public AdapterMovies(Context context, List<String> names, List<String> images, List<Long> ids, List<Long> idsFavorites, List<String> imagesFavoritesUser, List<Long> idsWatches, List<String> imagesWatchesUser, long timeWatches){
+    public AdapterMovies(Context context, List<String> names, List<String> images, List<Long> ids, List<Long> idsFavorites, List<String> imagesFavoritesUser, List<Long> idsWatches, List<String> imagesWatchesUser, long timeWatches,
+                         List<String> idGenderMoviesWatch, List<String> idGenresMovies){
         this.names = names;
         this.context = context;
         this.images = images;
@@ -76,6 +80,8 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
         this.watchesUser = idsWatches;
         this.imagesWatchesUser = imagesWatchesUser;
         this.timeWatches = timeWatches;
+        this.idGenderMoviesWatch = idGenderMoviesWatch;
+        this.idGenresMovies = idGenresMovies;
 
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
@@ -178,9 +184,12 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
                                     // Se não estiver já na bd, adiciona
                                     if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.addwatch).getConstantState())) {
                                         watchesUser.add(ids.get(position));
+                                        System.out.println("AQUUIIIIIIIIIII "+images);
+                                        idGenderMoviesWatch.add(idGenresMovies.get(position));
                                         imagesWatchesUser.add(images.get(position));
                                         userWatches.put("WatchesMovies", watchesUser);
                                         userWatches.put("WatchesImagesMovies", imagesWatchesUser);
+                                        userWatches.put("IdGenderMoviesWatch", idGenderMoviesWatch);
                                         timeWatches = timeWatches + time;
                                         userWatches.put("WatchesMoviesTime", timeWatches);
                                         documentReference.set(userWatches, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -195,7 +204,9 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.ViewHolder
                                     else if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.removewatch).getConstantState())){
                                         watchesUser.removeAll(Collections.singleton(ids.get(position)));
                                         imagesWatchesUser.removeAll(Collections.singleton(images.get(position)));
+                                        idGenderMoviesWatch.removeAll(Collections.singleton(idGenresMovies.get(position)));
                                         userWatches.put("WatchesMovies", watchesUser);
+                                        userWatches.put("IdGenderMoviesWatch", idGenderMoviesWatch);
                                         userWatches.put("WatchesImagesMovies", imagesWatchesUser);
                                         timeWatches = timeWatches - time;
                                         userWatches.put("WatchesMoviesTime", timeWatches);

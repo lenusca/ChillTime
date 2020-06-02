@@ -65,6 +65,8 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
     List<Long> idsWatches;
     List<String> imageWatches;
     List<String> dateWatches;
+    List<String> idGenderSeriesWatch;
+    List<String> idGenresSeries;
     long timeWatches;
 
     AdapterSeries adapter;
@@ -115,16 +117,18 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                     idsFavorites = (List<Long>) documentSnapshot.get("FavoritesSeries");
                     imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesSeries");
                 }
-                if(documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesSeriesTime") == null || documentSnapshot.get("WatchesSeriesDate") == null){
+                if(documentSnapshot.get("IdGenderSeriesWatch")==null || documentSnapshot.get("WatchesSeries") == null || documentSnapshot.get("WatchesImagesSeries") == null || documentSnapshot.get("WatchesSeriesTime") == null || documentSnapshot.get("WatchesSeriesDate") == null){
                     idsWatches = new ArrayList<>();
                     imageWatches = new ArrayList<>();
                     dateWatches = new ArrayList<>();
+                    idGenderSeriesWatch = new ArrayList<>();
                     timeWatches = 0;
                 }
                 else {
                     idsWatches = (List<Long>) documentSnapshot.get("WatchesSeries");
                     imageWatches = (List<String>) documentSnapshot.get("WatchesImagesSeries");
                     dateWatches = (List<String>) documentSnapshot.get("WatchesSeriesDate");
+                    idGenderSeriesWatch =  (List<String>) documentSnapshot.get("IdGenderSeriesWatch");
                     timeWatches = (long) documentSnapshot.get("WatchesSeriesTime");
 
                 }
@@ -198,6 +202,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
         serieId = new ArrayList<>();
         genresId = new ArrayList<>();
         genresName = new ArrayList<>();
+        idGenresSeries = new ArrayList<>();
         // Dropdown
         getGenres();
         getSeries("");
@@ -226,6 +231,8 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                                             serieName.add(serieData.getString("name"));
                                             //image
                                             serieImage.add(serieData.getString("poster_path"));
+                                            //genre
+                                            idGenresSeries.add(serieData.getString("genre_ids"));
                                         }
 
                                     }
@@ -234,7 +241,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                                     e.printStackTrace();
                                 }
                                 // mandar para o adapter que vai mandar para o reciclerview
-                                adapter = new AdapterSeries(Series.this, serieName, serieImage, serieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, dateWatches);
+                                adapter = new AdapterSeries(Series.this, serieName, serieImage, serieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, dateWatches, idGenderSeriesWatch, idGenresSeries);
                                 GridLayoutManager gridLayoutManager = new GridLayoutManager(Series.this, 3, GridLayoutManager.VERTICAL, false);
                                 dataList.setLayoutManager(gridLayoutManager);
                                 // colocar os dados no view
@@ -291,6 +298,8 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                                     serieName.add(serieData.getString("name"));
                                     //image
                                     serieImage.add(serieData.getString("poster_path"));
+                                    //genre
+                                    idGenresSeries.add(serieData.getString("genre_ids"));
                                 }
 
                             }
@@ -298,7 +307,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                             e.printStackTrace();
                         }
                         // mandar para o adapter que vai mandar para o reciclerview
-                        adapter = new AdapterSeries(Series.this, serieName, serieImage, serieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, dateWatches);
+                        adapter = new AdapterSeries(Series.this, serieName, serieImage, serieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, dateWatches, idGenderSeriesWatch, idGenresSeries);
                         GridLayoutManager gridLayoutManager = new GridLayoutManager(Series.this, 3, GridLayoutManager.VERTICAL, false);
                         dataList.setLayoutManager(gridLayoutManager);
                         // colocar os dados no view

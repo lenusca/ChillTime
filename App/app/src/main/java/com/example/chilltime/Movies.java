@@ -67,6 +67,8 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
     List<String> imageFavorites;
     List<Long> idsWatches;
     List<String> imageWatches;
+    List<String> idGenderMoviesWatch;
+    List<String> idGenresMovies;
     long timeWatches;
 
     AdapterMovies adapter;
@@ -118,14 +120,16 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                     idsFavorites = (List<Long>) documentSnapshot.get("FavoritesMovie");
                     imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesMovie");
                 }
-                if(documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
+                if(documentSnapshot.get("IdGenderMoviesWatch")==null || documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
                     idsWatches = new ArrayList<>();
                     imageWatches = new ArrayList<>();
+                    idGenderMoviesWatch = new ArrayList<>();
                     timeWatches = 0;
                 }
                 else {
                     idsWatches = (List<Long>) documentSnapshot.get("WatchesMovies");
                     imageWatches = (List<String>) documentSnapshot.get("WatchesImagesMovies");
+                    idGenderMoviesWatch = (List<String>) documentSnapshot.get("IdGenderMoviesWatch");
                     timeWatches = (long) documentSnapshot.get("WatchesMoviesTime");
                 }
                 printname =documentSnapshot.getString("Name");
@@ -198,6 +202,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
         movieId = new ArrayList<>();
         genresId = new ArrayList<>();
         genresName = new ArrayList<>();
+        idGenresMovies = new ArrayList<>();
         // Dropdown
         getGenres();
         getMovies("");
@@ -226,6 +231,8 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                                             movieName.add(movieData.getString("title"));
                                             //image
                                             movieImage.add(movieData.getString("poster_path"));
+                                            //genre
+                                            idGenresMovies.add(movieData.getString("genre_ids"));
                                         }
 
                                     }
@@ -233,7 +240,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                                     e.printStackTrace();
                                 }
                                 // mandar para o adapter que vai mandar para o reciclerview
-                                adapter = new AdapterMovies(Movies.this, movieName, movieImage, movieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches);
+                                adapter = new AdapterMovies(Movies.this, movieName, movieImage, movieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, idGenderMoviesWatch, idGenresMovies);
                                 GridLayoutManager gridLayoutManager = new GridLayoutManager(Movies.this, 3, GridLayoutManager.VERTICAL, false);
                                 dataList.setLayoutManager(gridLayoutManager);
                                 // colocar os dados no view
@@ -292,13 +299,16 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                                     movieName.add(movieData.getString("title"));
                                     //image
                                     movieImage.add(movieData.getString("poster_path"));
+                                    //genre
+                                    System.out.println("IDGENRESMOVIES "+movieData.getString("genre_ids"));
+                                    idGenresMovies.add(movieData.getString("genre_ids"));
                                 }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         // mandar para o adapter que vai mandar para o reciclerview
-                        adapter = new AdapterMovies(Movies.this, movieName, movieImage, movieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches);
+                        adapter = new AdapterMovies(Movies.this, movieName, movieImage, movieId, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, idGenderMoviesWatch, idGenresMovies);
                         GridLayoutManager gridLayoutManager = new GridLayoutManager(Movies.this, 3, GridLayoutManager.VERTICAL, false);
                         dataList.setLayoutManager(gridLayoutManager);
                         // colocar os dados no view

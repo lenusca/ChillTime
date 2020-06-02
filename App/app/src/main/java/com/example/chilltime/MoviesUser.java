@@ -43,6 +43,8 @@ public class MoviesUser extends Fragment implements IconSwitch.CheckedChangeList
     List<String> imageFavorites;
     List<Long> idsWatches;
     List<String> imageWatches;
+    List<String> idGenderMoviesWatch;
+    List<String> idGenresMovies;
     long timeWatches;
 
     // Switch
@@ -97,17 +99,19 @@ public class MoviesUser extends Fragment implements IconSwitch.CheckedChangeList
                         idsFavorites = (List<Long>) documentSnapshot.get("FavoritesMovie");
                         imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesMovie");
                     }
-                    if(documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
+                    if(documentSnapshot.get("IdGenderMoviesWatch")==null || documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
                         idsWatches = new ArrayList<>();
                         imageWatches = new ArrayList<>();
+                        idGenderMoviesWatch = new ArrayList<>();
                         timeWatches = 0;
                     }
                     else {
                         idsWatches = (List<Long>) documentSnapshot.get("WatchesMovies");
                         imageWatches = (List<String>) documentSnapshot.get("WatchesImagesMovies");
+                        idGenderMoviesWatch = (List<String>) documentSnapshot.get("IdGenderMoviesWatch");
                         timeWatches = (long) documentSnapshot.get("WatchesMoviesTime");
                     }
-                    adapter = new AdapterMovies(getContext(), imageWatches, imageWatches, idsWatches, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches);
+                    adapter = new AdapterMovies(getContext(), imageWatches, imageWatches, idsWatches, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, idGenderMoviesWatch, idGenresMovies);
 
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
                     dataList.setLayoutManager(gridLayoutManager);
@@ -133,17 +137,19 @@ public class MoviesUser extends Fragment implements IconSwitch.CheckedChangeList
                         idsFavorites = (List<Long>) documentSnapshot.get("FavoritesMovie");
                         imageFavorites = (List<String>) documentSnapshot.get("FavoritesImagesMovie");
                     }
-                    if(documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
+                    if(documentSnapshot.get("IdGenderMoviesWatch")==null || documentSnapshot.get("WatchesMovies") == null || documentSnapshot.get("WatchesImagesMovies") == null || documentSnapshot.get("WatchesMoviesTime") == null){
                         idsWatches = new ArrayList<>();
                         imageWatches = new ArrayList<>();
+                        idGenderMoviesWatch = new ArrayList<>();
                         timeWatches = 0;
                     }
                     else {
                         idsWatches = (List<Long>) documentSnapshot.get("WatchesMovies");
                         imageWatches = (List<String>) documentSnapshot.get("WatchesImagesMovies");
+                        idGenderMoviesWatch = (List<String>) documentSnapshot.get("IdGenderMoviesWatch");
                         timeWatches = (long) documentSnapshot.get("WatchesMoviesTime");
                     }
-                    adapter = new AdapterMovies(getContext(), imageFavorites, imageFavorites, idsFavorites, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches);
+                    adapter = new AdapterMovies(getContext(), imageFavorites, imageFavorites, idsFavorites, idsFavorites, imageFavorites, idsWatches, imageWatches, timeWatches, idGenderMoviesWatch, idGenresMovies);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
                     dataList.setLayoutManager(gridLayoutManager);
                     // colocar os dados no view

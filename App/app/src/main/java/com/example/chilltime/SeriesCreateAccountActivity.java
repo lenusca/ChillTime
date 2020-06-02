@@ -42,6 +42,8 @@ public class SeriesCreateAccountActivity extends AppCompatActivity {
     List<Long> idsWatches = new LinkedList<>(); //ids dos movies vistos pelo user
     List<String> imagesWatchesUser= new LinkedList<>(); //imagens dos filmes vistos pelo user
     List<String> dateWatches = new LinkedList<>();
+    List<String> idGenderSeriesWatch = new ArrayList<>(); //id dos generos dos filmes vistos do user
+    List<String> idGenresSeries = new ArrayList<>(); ////id dos generos dos filmes vistos pelo user
     long timeWatches = 0;
     //XML
     RecyclerView dataList;
@@ -75,7 +77,7 @@ public class SeriesCreateAccountActivity extends AppCompatActivity {
             }
         });
         if(idsGenreSerie!=null){
-            System.out.println("IDSSSSSSSS GENRES MOVIES--------- "+idsGenreSerie);
+            //System.out.println("IDSSSSSSSS GENRES MOVIES--------- "+idsGenreSerie);
             getMovies(idsGenreSerie);
         }
 
@@ -84,12 +86,12 @@ public class SeriesCreateAccountActivity extends AppCompatActivity {
 
     private void getMovies(List<String> ids){
         StringBuilder allIds = new StringBuilder();
-        System.out.println("LISTTTTTTTTT -------------> "+ids);
+        //System.out.println("LISTTTTTTTTT -------------> "+ids);
         if(ids != null){
             for(int i=0; i<ids.size(); i++){
                 allIds.append(ids.get(i)).append("%7C");
             }
-            System.out.println("################################### allIds: "+allIds);
+            //System.out.println("################################### allIds: "+allIds);
             mQueue = Volley.newRequestQueue(this);
             //ir buscar os filmes a partir do genero os populares
             String url = "https://api.themoviedb.org/3/discover/tv?api_key=6458cccff38c4ec22f31df407f03048e&language=en-US&sort_by=popularity.desc&page=1%7C2&with_genres="+allIds+"&include_null_first_air_dates=false";
@@ -110,13 +112,15 @@ public class SeriesCreateAccountActivity extends AppCompatActivity {
                                 images.add(movieData.getString("poster_path"));
                                 //nome
                                 names.add(movieData.getString("name"));
+                                //genre
+                                idGenresSeries.add(movieData.getString("genre_ids"));
                             }
                         }
                     }catch (JSONException e){
                         e.printStackTrace();
                     }
                     // mandar para o adapter que vai mandar para o reciclerview
-                    mAdapter = new AdapterSeries(SeriesCreateAccountActivity.this, names,  images, idsMovie, idsFavorites, imagesFavoritesUser,  idsWatches, imagesWatchesUser, timeWatches, dateWatches);
+                    mAdapter = new AdapterSeries(SeriesCreateAccountActivity.this, names,  images, idsMovie, idsFavorites, imagesFavoritesUser,  idsWatches, imagesWatchesUser, timeWatches, dateWatches, idGenderSeriesWatch, idGenresSeries);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(SeriesCreateAccountActivity.this, 3, GridLayoutManager.VERTICAL, false);
                     dataList.setLayoutManager(gridLayoutManager);
                     // colocar os dados no view

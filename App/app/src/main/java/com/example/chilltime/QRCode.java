@@ -187,7 +187,6 @@ public class QRCode extends AppCompatActivity {
                 isDetected = !isDetected;
                 System.out.println("is detected "+isDetected);
                 btn_scan.setEnabled(isDetected);
-
             }
         });
 
@@ -238,7 +237,7 @@ public class QRCode extends AppCompatActivity {
                         }
                     });
             String[] idYoutube = urlQRCode.split("=");
-            System.out.println("IDDDDDDDDDDD "+idYoutube[1]);
+            //System.out.println("IDDDDDDDDDDD "+idYoutube[1]);
             intent = new Intent(QRCode.this, PlayVideo.class);
             intent.putExtra(EXTRA_MESSAGE, idYoutube[1]);
             QRCode.this.startActivity(intent);

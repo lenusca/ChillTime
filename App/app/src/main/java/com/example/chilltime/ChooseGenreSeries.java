@@ -50,7 +50,6 @@ public class ChooseGenreSeries extends AppCompatActivity {
                             //System.out.println("AQUIIIIIIIII "+jsonArray);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject genre = jsonArray.getJSONObject(i);
-                                String genre_name = genre.getString("name");
                                 listGenre.add(new Genre(genre.getString("id"), genre.getString("name")));
                             }
 
