@@ -163,7 +163,9 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                         Series.this.finish();
                         return true;
                     case R.id.qrcode:
-                        Toast.makeText(Series.this, "QR Code",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(Series.this, QRCode.class);
+                        startActivity(intent);
+                        Series.this.finish();
                         return true;
                     case R.id.userinfo:
                         intent = new Intent(Series.this, User.class);

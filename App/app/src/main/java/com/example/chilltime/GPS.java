@@ -111,7 +111,7 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback, Adapte
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        sidebar = (DrawerLayout)findViewById(R.id.sidebar);
+        sidebar = (DrawerLayout) findViewById(R.id.sidebar);
         final NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
         View headerView = nav_view.getHeaderView(0);
         name = headerView.findViewById(R.id.user_name);
@@ -125,14 +125,14 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback, Adapte
 
         // ir buscar o documento relacionado com o utilizador, usando o uid
         final DocumentReference documentReference = mStore.collection("Users").document(userID);
-        documentReference.addSnapshotListener(this, new EventListener< DocumentSnapshot >(){
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
 
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 // dizer o que quer ir buscar
                 String printname = "";
                 String printimage = "";
-                printname =documentSnapshot.getString("Name");
+                printname = documentSnapshot.getString("Name");
                 printimage = documentSnapshot.getString("Image");
                 name.setText(printname);
                 Picasso.get().load(printimage).into(image);
@@ -152,8 +152,7 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback, Adapte
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                switch(id)
-                {
+                switch (id) {
                     case R.id.list_movies:
                         intent = new Intent(GPS.this, Movies.class);
                         startActivity(intent);
@@ -169,7 +168,9 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback, Adapte
                         startActivity(intent);
                         return true;
                     case R.id.qrcode:
-                        Toast.makeText(GPS.this, "QR Code",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(GPS.this, QRCode.class);
+                        startActivity(intent);
+                        GPS.this.finish();
                         return true;
                     case R.id.userinfo:
                         intent = new Intent(GPS.this, User.class);
@@ -196,10 +197,9 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback, Adapte
     }
 
 
-
     //sidebar
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         return choice.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
@@ -218,7 +218,7 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback, Adapte
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Intent intent = new Intent(GPS.this, MovieList.class);
-                intent.putExtra(EXTRA_MESSAGE, String.valueOf(names.indexOf(marker.getTitle())+1));
+                intent.putExtra(EXTRA_MESSAGE, String.valueOf(names.indexOf(marker.getTitle()) + 1));
                 GPS.this.startActivity(intent);
                 return false;
             }
@@ -231,21 +231,31 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback, Adapte
             int requestCode,
             String[] permissions,
             int[] grantResults
-    ){
+    ) {
         userLocalization();
     }
 
-    public void userLocalization(){
+    public void userLocalization() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location != null){
+                if (location != null) {
                     currentLocation = location;
                     LatLng userLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                     int height = 150;
                     int width = 150;
-                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.marker);
-                    Bitmap b=bitmapdraw.getBitmap();
+                    BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.marker);
+                    Bitmap b = bitmapdraw.getBitmap();
                     Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
                     map.addMarker(new MarkerOptions().position(userLocation).title("User").icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
                     map.moveCamera(CameraUpdateFactory.newLatLng(userLocation));

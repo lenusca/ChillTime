@@ -166,7 +166,9 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                         Movies.this.finish();
                         return true;
                     case R.id.qrcode:
-                        Toast.makeText(Movies.this, "QR Code",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(Movies.this, QRCode.class);
+                        startActivity(intent);
+                        Movies.this.finish();
                         return true;
                     case R.id.userinfo:
                         intent = new Intent(Movies.this, User.class);

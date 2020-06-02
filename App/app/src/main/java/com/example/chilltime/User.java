@@ -155,7 +155,9 @@ public class User extends AppCompatActivity{
                         User.this.finish();
                         return true;
                     case R.id.qrcode:
-                        Toast.makeText(User.this, "QR Code",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(User.this, QRCode.class);
+                        startActivity(intent);
+                        User.this.finish();
                         return true;
                     case R.id.userinfo:
                         intent = new Intent(User.this, User.class);
@@ -163,7 +165,9 @@ public class User extends AppCompatActivity{
                         User.this.finish();
                         return true;
                     case R.id.settings:
-                        Toast.makeText(User.this, "Settings",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(User.this, Settings.class);
+                        startActivity(intent);
+                        User.this.finish();
                         return true;
                     case R.id.logout:
                         FirebaseAuth.getInstance().signOut();

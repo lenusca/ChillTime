@@ -166,6 +166,12 @@ public class Settings extends AppCompatActivity {
         });
     }
 
+    //sidebar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        return choice.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
     @SuppressLint("ResourceType")
     public void darkOn(View view) {
         Map<String, Object> userData = new HashMap<>();
