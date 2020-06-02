@@ -1,8 +1,11 @@
 package com.example.chilltime;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -18,6 +21,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.chilltime.service.Notifications;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +31,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashBoard extends AppCompatActivity {
 
@@ -36,7 +44,10 @@ public class DashBoard extends AppCompatActivity {
     FirebaseFirestore mStore;
     String userID;
     DocumentReference documentReference;
+    List<String> dateList;
 
+    // Para mandar o id para outra activity(details)
+    public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +63,9 @@ public class DashBoard extends AppCompatActivity {
         btSettings = findViewById(R.id.btSettings);
         //Image View
         logo = findViewById(R.id.imageView2);
+
+        dateList = new ArrayList<>();
+
 
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         switch (currentNightMode){
@@ -72,6 +86,15 @@ public class DashBoard extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.get("WatchesSeriesDate") != null){ ;
+                    dateList = (List<String>) documentSnapshot.get("WatchesSeriesDate");
+                    if(!isMyServiceRunning(Notifications.class)){
+
+                        Intent intent = new Intent(DashBoard.this, Notifications.class);
+                        intent.putExtra(EXTRA_MESSAGE, dateList.toString());
+                        startService(intent);
+                    }
+                }
                 if(documentSnapshot.getString("Dark")!=null){
                     if(documentSnapshot.getString("Dark").equals("1")){
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -83,6 +106,9 @@ public class DashBoard extends AppCompatActivity {
         });
 
         notification();
+
+
+
 
     }
 
@@ -150,4 +176,17 @@ public class DashBoard extends AppCompatActivity {
         }
         return false;
     }
+
+    // Notifcações
+    // verifica se o serviço esta a correr
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

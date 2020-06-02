@@ -1,7 +1,10 @@
 package com.example.chilltime;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +30,17 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder> {
+    //
     List<String> names;
     List<String> images;
     List<Long> ids;
@@ -46,16 +54,18 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
     List<String> imagesFavoritesUser;
     List<Long> watchesUser;
     List<String> imagesWatchesUser;
+    List<String> dateWatches;
     DocumentReference documentReference;
     long timeWatches;
     int time = 0;
+    String date = "";
     //api
     RequestQueue mQueue;
     // Para mandar o id para outra activity(details)
     public static final String EXTRA_MESSAGE = "com.example.chilltime.extra.MESSAGE";
 
 
-    public AdapterSeries(Context context, List<String> names, List<String> images, List<Long> ids, List<Long> idsFavorites, List<String> imagesFavoritesUser, List<Long> idsWatches, List<String> imagesWatchesUser, long timeWatches){
+    public AdapterSeries(Context context, List<String> names, List<String> images, List<Long> ids, List<Long> idsFavorites, List<String> imagesFavoritesUser, List<Long> idsWatches, List<String> imagesWatchesUser, long timeWatches, List<String> dateWatches){
         this.names = names;
         this.context = context;
         this.images = images;
@@ -66,6 +76,7 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
         this.watchesUser = idsWatches;
         this.imagesWatchesUser = imagesWatchesUser;
         this.timeWatches = timeWatches;
+        this.dateWatches = dateWatches;
 
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
@@ -146,6 +157,15 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
+                                    // notificações
+                                    Calendar myAlarmDate = Calendar.getInstance();
+                                    myAlarmDate.setTimeInMillis(System.currentTimeMillis());
+
+                                    if(response.getString("last_air_date") != null){
+                                        date = response.getString("last_air_date");
+                                        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                                    }
+
                                     time = response.getInt("number_of_episodes")*response.getJSONArray("episode_run_time").getInt(0);
                                     // adicionar aos vistos series selecionado
                                     Map<String, Object> userWatches = new HashMap<>();
@@ -153,8 +173,10 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
                                     if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.addwatch).getConstantState())) {
                                         watchesUser.add(ids.get(position));
                                         imagesWatchesUser.add(images.get(position));
+                                        dateWatches.add(date);
                                         userWatches.put("WatchesSeries", watchesUser);
                                         userWatches.put("WatchesImagesSeries", imagesWatchesUser);
+                                        userWatches.put("WatchesSeriesDate", dateWatches);
                                         timeWatches = timeWatches + time;
                                         userWatches.put("WatchesSeriesTime", timeWatches);
                                         documentReference.set(userWatches, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -169,8 +191,10 @@ public class AdapterSeries extends RecyclerView.Adapter<AdapterSeries.ViewHolder
                                     else if(holder.addWatch.getDrawable().getConstantState().equals(context.getResources().getDrawable(R.drawable.removewatch).getConstantState())){
                                         watchesUser.removeAll(Collections.singleton(ids.get(position)));
                                         imagesWatchesUser.removeAll(Collections.singleton(images.get(position)));
+                                        dateWatches.remove(date);
                                         userWatches.put("WatchesSeries", watchesUser);
                                         userWatches.put("WatchesImagesSeries", imagesWatchesUser);
+                                        userWatches.put("WatchesSeriesDate", dateWatches);
                                         timeWatches = timeWatches - time;
                                         userWatches.put("WatchesSeriesTime", timeWatches);
                                         documentReference.set(userWatches,  SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -111,6 +111,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+        <service android:name=".service.Notifications"/>
     </application>
     <uses-feature
         android:name="android.hardware.camera2.CameraMetadata.LENS_FACING_FRONT"

@@ -81,7 +81,7 @@ public class AdapterLocation extends RecyclerView.Adapter<AdapterLocation.ViewHo
         }
 
         else {
-            out.println(images);
+
             mQueue = Volley.newRequestQueue(context);
             ImageRequest request = new ImageRequest( "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + images.get(position) + "&key=AIzaSyBnmYS6fjLrp7mtdh-L79054GnpUIml2q4",
                     new Response.Listener<Bitmap>() {

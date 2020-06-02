@@ -41,6 +41,7 @@ public class SeriesCreateAccountActivity extends AppCompatActivity {
     List<String> imagesFavoritesUser = new LinkedList<>(); //imagens dos filmes favoritos do user
     List<Long> idsWatches = new LinkedList<>(); //ids dos movies vistos pelo user
     List<String> imagesWatchesUser= new LinkedList<>(); //imagens dos filmes vistos pelo user
+    List<String> dateWatches = new LinkedList<>();
     long timeWatches = 0;
     //XML
     RecyclerView dataList;
@@ -115,7 +116,7 @@ public class SeriesCreateAccountActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     // mandar para o adapter que vai mandar para o reciclerview
-                    mAdapter = new AdapterSeries(SeriesCreateAccountActivity.this, names,  images, idsMovie, idsFavorites, imagesFavoritesUser,  idsWatches, imagesWatchesUser, timeWatches);
+                    mAdapter = new AdapterSeries(SeriesCreateAccountActivity.this, names,  images, idsMovie, idsFavorites, imagesFavoritesUser,  idsWatches, imagesWatchesUser, timeWatches, dateWatches);
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(SeriesCreateAccountActivity.this, 3, GridLayoutManager.VERTICAL, false);
                     dataList.setLayoutManager(gridLayoutManager);
                     // colocar os dados no view
