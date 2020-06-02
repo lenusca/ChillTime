@@ -73,7 +73,7 @@ public class QRCode extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_q_r_code);
-        btn_scan = findViewById(R.id.btnscan);
+       // btn_scan = findViewById(R.id.btnscan);
 
         // SideBar
         sidebar = (DrawerLayout)findViewById(R.id.sidebar);
@@ -180,15 +180,15 @@ public class QRCode extends AppCompatActivity {
 
 
     private void startCamera(){
-        btn_scan.setEnabled(isDetected);
-        btn_scan.setOnClickListener(new View.OnClickListener() {
+        //btn_scan.setEnabled(isDetected);
+        /*btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isDetected = !isDetected;
                 System.out.println("is detected "+isDetected);
                 btn_scan.setEnabled(isDetected);
             }
-        });
+        });*/
 
         cameraView = findViewById(R.id.camera_view);
         cameraView.setLifecycleOwner(this);
@@ -220,7 +220,7 @@ public class QRCode extends AppCompatActivity {
                         public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
                             if(firebaseVisionBarcodes.size()>0){
                                 isDetected = false;
-                                btn_scan.setEnabled(isDetected);
+                                //btn_scan.setEnabled(isDetected);
                                 FirebaseVisionBarcode item = firebaseVisionBarcodes.get(0);
                                 switch(item.getValueType()){
                                     case FirebaseVisionBarcode.TYPE_URL:

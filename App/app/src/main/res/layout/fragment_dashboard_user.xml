@@ -262,14 +262,14 @@
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/moviesChart"
-                android:layout_width="200dp"
+                android:layout_width="300dp"
                 android:layout_height="200dp"
                 android:layout_marginStart="0dp"
                 android:layout_marginEnd="0dp" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/seriesChart"
-                android:layout_width="200dp"
+                android:layout_width="300dp"
                 android:layout_height="200dp"
                 android:layout_marginEnd="0dp"
                 android:layout_marginTop="20dp" />

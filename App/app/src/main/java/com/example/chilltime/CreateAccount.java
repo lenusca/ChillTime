@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +34,7 @@ public class CreateAccount extends AppCompatActivity {
     // Dados para serem guardados
     EditText name;
     Button confirm;
+    ImageView logo;
     // autenticação no firebase
     FirebaseAuth mAuth;
     // guardar os dados
@@ -47,7 +50,18 @@ public class CreateAccount extends AppCompatActivity {
         password = findViewById(R.id.Password);
         confirmPassword = findViewById(R.id.confirm_password);
         confirm = findViewById(R.id.confirm);
+        logo = findViewById(R.id.logo);
         //name = findViewById(R.id.Name);
+
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode){
+            case Configuration.UI_MODE_NIGHT_NO:
+                logo.setImageResource(R.drawable.logo);
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                logo.setImageResource(R.drawable.logo_dark);
+                break;
+        }
 
         // autenticação no firebase
         mAuth = FirebaseAuth.getInstance();

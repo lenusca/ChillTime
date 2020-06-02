@@ -27,7 +27,7 @@
                 android:background="@drawable/rectangle_camera"/>
         </FrameLayout>
 
-        <LinearLayout
+    <!--    <LinearLayout
             android:id="@+id/info"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
@@ -50,7 +50,7 @@
                 android:textColor="@android:color/white"
                 android:text="@string/scan" />
 
-        </LinearLayout>
+        </LinearLayout>-->
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
