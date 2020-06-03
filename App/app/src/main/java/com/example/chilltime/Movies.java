@@ -172,7 +172,7 @@ public class Movies extends AppCompatActivity implements AdapterView.OnItemSelec
                     case R.id.qrcode:
                         intent = new Intent(Movies.this, QRCode.class);
                         startActivity(intent);
-                        Movies.this.finish();
+                        //Movies.this.finish();
                         return true;
                     case R.id.userinfo:
                         intent = new Intent(Movies.this, User.class);

@@ -29,7 +29,7 @@
     </style>
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <!-- Customize color of navigation drawer icon and back arrow -->
-        <item name="colorControlNormal">@android:color/white</item>
+      <item name="colorControlNormal">@android:color/white</item>
     </style>
     <style name="WindowAnimationTransition">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>

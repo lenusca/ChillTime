@@ -72,7 +72,6 @@ public class DashboardUser extends Fragment {
     List<String> idGenreSeries;
     List<String> idsDividedSeries;
     Map<String, Integer> countGenreSeries = new HashMap<>();
-    Map<String, String> listGenreSeries =  new HashMap<>();
     private RequestQueue mQueue;
 
 

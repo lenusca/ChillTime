@@ -142,7 +142,8 @@ public class Settings extends AppCompatActivity {
                         startActivity(intent);
                         return true;
                     case R.id.qrcode:
-                        Toast.makeText(Settings.this, "QR Code",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(Settings.this, QRCode.class);
+                        startActivity(intent);
                         return true;
                     case R.id.userinfo:
                         intent = new Intent(Settings.this, User.class);

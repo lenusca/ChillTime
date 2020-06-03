@@ -172,7 +172,7 @@ public class Series extends AppCompatActivity implements AdapterView.OnItemSelec
                     case R.id.qrcode:
                         intent = new Intent(Series.this, QRCode.class);
                         startActivity(intent);
-                        Series.this.finish();
+                        //Series.this.finish();
                         return true;
                     case R.id.userinfo:
                         intent = new Intent(Series.this, User.class);

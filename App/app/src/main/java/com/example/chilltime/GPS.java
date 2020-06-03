@@ -170,12 +170,11 @@ public class GPS extends AppCompatActivity implements OnMapReadyCallback, Adapte
                     case R.id.qrcode:
                         intent = new Intent(GPS.this, QRCode.class);
                         startActivity(intent);
-                        GPS.this.finish();
                         return true;
                     case R.id.userinfo:
                         intent = new Intent(GPS.this, User.class);
                         startActivity(intent);
-                        GPS.this.finish();
+                        //GPS.this.finish();
                         return true;
                     case R.id.settings:
                         Intent intent = new Intent(GPS.this, Settings.class);
