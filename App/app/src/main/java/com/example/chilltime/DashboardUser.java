@@ -116,6 +116,7 @@ public class DashboardUser extends Fragment {
 
                 idsDivided = getIDGenre(idGenreMovies);
                 idsDividedSeries = getIDGenre(idGenreSeries);
+                System.out.println("DIVIDERRRR "+idsDividedSeries+"\n"+idsDivided);
                 getGenre(); //get genres from volley
                 getGenreSeries(); //get genres from volley
                 mTime = (documentSnapshot.getLong("WatchesMoviesTime")).intValue();
@@ -276,14 +277,18 @@ public class DashboardUser extends Fragment {
         if(listGenre!=null && idsDivided!=null){
             //count diferent genres
             for(String idGenre: idsDivided){
-                if(!countGenreMovies.containsKey(idGenre)){
+                //System.out.println("ID GENRE: "+idGenre);
+                if(!countGenreMovies.containsKey(listGenre.get(idGenre))){
                     count=count+1;
                     countGenreMovies.put(listGenre.get(idGenre), count);
+                    //System.out.println("COUNT GENRE MOVIES not contains "+countGenreMovies);
                     count=0;
                 }else{
                     getCount = countGenreMovies.get(listGenre.get(idGenre))+1;
+                    //System.out.println("get countttt "+getCount);
                     countGenreMovies.remove(listGenre.get(idGenre));
                     countGenreMovies.put(listGenre.get(idGenre), getCount);
+                    //System.out.println("COUNT GENRE MOVIES "+countGenreMovies);
                 }
             }
         }
@@ -352,7 +357,7 @@ public class DashboardUser extends Fragment {
         if(listGenre!=null && idsDividedSeries!=null){
             //count diferent genres
             for(String idGenre: idsDividedSeries){
-                if(!countGenreSeries.containsKey(idGenre)){
+                if(!countGenreSeries.containsKey(listGenre.get(idGenre))){
                     count=count+1;
                     countGenreSeries.put(listGenre.get(idGenre), count);
                     count=0;
