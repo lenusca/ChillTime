@@ -49,15 +49,15 @@ public class GenreListMovieAdapter extends RecyclerView.Adapter<GenreListMovieAd
 
     @Override
     public void onBindViewHolder(@NonNull final GenreViewHold holder, final int position) {
-        holder.genre.setText(listGenre.get(position).name);
+        holder.genre.setText(listGenre.get(position).getName());
         holder.genre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, Object> userGenreMovies = new HashMap<>();
                 if(holder.genre.isChecked()){
-                    if(userGenre.contains(listGenre.get(position).id)){
+                    if(userGenre.contains(listGenre.get(position).getID())){
                         holder.genre.setChecked(false);
-                        userGenre.remove(listGenre.get(position).id);
+                        userGenre.remove(listGenre.get(position).getID());
                         //System.out.println("AQUIIIIIIII Removido"+userGenre);
                         userGenreMovies.put("GenreMovies", userGenre);
                         documentReference.set(userGenreMovies, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -67,7 +67,7 @@ public class GenreListMovieAdapter extends RecyclerView.Adapter<GenreListMovieAd
                             }
                         });
                     }else {
-                        userGenre.add(listGenre.get(position).id);
+                        userGenre.add(listGenre.get(position).getID());
                         //System.out.println("AQUIIIIIIII adicionado" + userGenre);
                         userGenreMovies.put("GenreMovies", userGenre);
                         documentReference.update(userGenreMovies).addOnSuccessListener(new OnSuccessListener<Void>() {

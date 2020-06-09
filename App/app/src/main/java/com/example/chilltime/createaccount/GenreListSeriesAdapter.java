@@ -47,15 +47,15 @@ public class GenreListSeriesAdapter extends RecyclerView.Adapter<GenreListSeries
 
     @Override
     public void onBindViewHolder(@NonNull final GenreSeriesViewHold holder, final int position) {
-        holder.genre.setText(listGenre.get(position).name);
+        holder.genre.setText(listGenre.get(position).getName());
         holder.genre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, Object> userGenreSeries = new HashMap<>();
                 if(holder.genre.isChecked()){
-                    if(userGenre.contains(listGenre.get(position).id)){
+                    if(userGenre.contains(listGenre.get(position).getID())){
                         holder.genre.setChecked(false);
-                        userGenre.remove(listGenre.get(position).id);
+                        userGenre.remove(listGenre.get(position).getID());
                         //System.out.println("AQUIIIIIIII Removido"+userGenre);
                         userGenreSeries.put("GenreSeries", userGenre);
                         documentReference.set(userGenreSeries, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -65,7 +65,7 @@ public class GenreListSeriesAdapter extends RecyclerView.Adapter<GenreListSeries
                             }
                         });
                     }else {
-                        userGenre.add(listGenre.get(position).id);
+                        userGenre.add(listGenre.get(position).getID());
                         //System.out.println("AQUIIIIIIII adicionado" + userGenre);
                         userGenreSeries.put("GenreSeries", userGenre);
                         documentReference.update(userGenreSeries).addOnSuccessListener(new OnSuccessListener<Void>() {

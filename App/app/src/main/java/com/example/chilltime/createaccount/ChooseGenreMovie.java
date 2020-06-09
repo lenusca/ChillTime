@@ -84,13 +84,3 @@ public class ChooseGenreMovie extends AppCompatActivity {
 
     }
 }
-
-class Genre{
-    String id;
-    String name;
-
-    public Genre(String id, String name){
-        this.id = id;
-        this.name = name;
-    }
-}
