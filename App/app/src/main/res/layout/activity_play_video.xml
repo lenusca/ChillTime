@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayVideo">
+    tools:context="com.example.chilltime.PlayVideo.PlayVideo">
     <com.google.android.youtube.player.YouTubePlayerView
         android:id="@+id/video"
         android:layout_width="match_parent"

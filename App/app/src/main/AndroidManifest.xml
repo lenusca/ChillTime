@@ -13,77 +13,77 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".QRCode"
+            android:name=".qrcode.QRCode"
             android:enabled="true"
             android:icon="@drawable/home"
             android:label="QRCode"
             android:roundIcon="@drawable/home" />
 
-        <activity android:name=".EditAccount" />
+        <activity android:name=".settings.EditAccount" />
 
         <activity
-            android:name=".User"
+            android:name=".UserActivity.User"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Settings"
+            android:name=".settings.Settings"
             android:enabled="true"
             android:icon="@drawable/home"
             android:label="Settings"
             android:roundIcon="@drawable/home" />
         <activity
-            android:name=".SeriesCreateAccountActivity"
+            android:name=".createaccount.SeriesCreateAccountActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MoviesCreateAccountActivity"
+            android:name=".createaccount.MoviesCreateAccountActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChooseGenreSeries"
+            android:name=".createaccount.ChooseGenreSeries"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChooseGenreMovie"
+            android:name=".createaccount.ChooseGenreMovie"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ConfigUser"
+            android:name=".createaccount.ConfigUser"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DetailsSerie"
+            android:name=".series.DetailsSerie"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PlayVideo"
+            android:name="com.example.chilltime.PlayVideo.PlayVideo"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowFullscreen="true" />
         <activity
-            android:name=".DetailsMovie"
+            android:name=".movies.DetailsMovie"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DashBoard"
+            android:name=".menu.DashBoard"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MovieList"
+            android:name=".gps.MovieList"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Series"
+            android:name=".series.Series"
             android:enabled="true"
             android:icon="@drawable/home"
             android:label="Series"
             android:roundIcon="@drawable/home" />
         <activity
-            android:name=".Movies"
+            android:name=".movies.Movies"
             android:enabled="true"
             android:icon="@drawable/home"
             android:label="Movies"
             android:roundIcon="@drawable/home" />
         <activity
-            android:name=".GPS"
+            android:name=".gps.GPS"
             android:enabled="true"
             android:icon="@drawable/home"
             android:label="GPS"
             android:roundIcon="@drawable/home" />
         <activity
-            android:name=".CreateAccount"
+            android:name=".createaccount.CreateAccount"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Login"
+            android:name=".login.Login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -105,7 +105,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_API_key" />
         <service
-            android:name=".MyMessagingService"
+            android:name=".service.MyMessagingService"
            >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>

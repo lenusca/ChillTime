@@ -7,7 +7,7 @@
     android:id="@+id/genre_movie_list"
     android:orientation="vertical"
     android:paddingTop="4sp"
-    tools:context=".ChooseGenreMovie">
+    tools:context=".createaccount.ChooseGenreMovie">
 
     <ImageView
         android:id="@+id/img_movie"
